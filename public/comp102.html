@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMP102 Verbatim Premium Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === BASE === */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            /* Only transition color-related props — avoids layout jank/lag */
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+        .code-font { font-family: 'Fira Code', monospace; font-variant-ligatures: none; font-size: 13.5px; line-height: 1.75; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* === DARK THEME (Default) === */
+        body                { background-color: #020617 !important; color: #e2e8f0; }
+        .card-bg            { background-color: #0f172a; border-color: #1e293b; color: #e2e8f0; }
+        .code-box-bg        { background-color: #020617; border-color: #334155; color: #34d399; }
+        .text-main          { color: #f1f5f9; }
+        .text-muted         { color: #94a3b8; }
+        .nav-bg             { background-color: #0f172a; border-color: #1e293b; }
+        .option-wrapper     { background-color: #0a1628; border-color: #1e293b; color: #cbd5e1; }
+        .tab-idle           { background-color: rgba(15,23,42,0.5); border-color: rgba(30,41,59,0.5); color: #94a3b8; }
+        .tab-badge-idle     { background-color: #020617; border-color: #1e293b; color: #64748b; }
+
+        .badge-pass, .badge-fail, .badge-done, .tab-badge-idle {
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        /* === LIGHT THEME === */
+        body.light-theme                { background-color: #f1f5f9 !important; color: #0f172a; }
+        body.light-theme .card-bg       { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+        body.light-theme .code-box-bg   { background-color: #f8fafc; border-color: #cbd5e1; color: #15803d; }
+        body.light-theme .text-main     { color: #0f172a; }
+        body.light-theme .text-muted    { color: #475569; }
+        body.light-theme .nav-bg        { background-color: #ffffff; border-color: #e2e8f0; }
+        body.light-theme .option-wrapper{ background-color: #ffffff; border-color: #e2e8f0; color: #1e293b; }
+        body.light-theme .tab-idle      { background-color: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+        body.light-theme .tab-badge-idle{ background-color: #e2e8f0; border-color: #94a3b8; color: #475569; }
+
+        /* Theme/score buttons in light */
+        body.light-theme #theme-btn {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #4f46e5;
+        }
+        body.light-theme #overall-score-container {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        /* Reset/Submit buttons in light */
+        body.light-theme .btn-reset {
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+        body.light-theme .btn-reset:hover { background-color: #f1f5f9; }
+
+        /* Footer: keep gradient names in both modes */
+        .footer-name-1 {
+            background: linear-gradient(to right, #818cf8, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .footer-name-2 {
+            background: linear-gradient(to right, #22d3ee, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        /* AI Explanation box */
+        .explain-box {
+            background-color: #0d1f3c;
+            border-color: #1e3a5f;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+        body.light-theme .explain-box {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+        }
+        /* Solution box & textarea */
+        .solution-box {
+            background-color: rgba(2,6,23,0.3);
+            border-color: #334155;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+        .subjective-textarea {
+            background-color: rgba(2,6,23,0.2);
+            border-color: rgba(51,65,85,0.8);
+            color: #34d399;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+        }
+        body.light-theme .solution-box {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+        }
+        body.light-theme .subjective-textarea {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+            color: #0f172a;
+        }
+        body.light-theme .subjective-textarea::placeholder { color: #94a3b8; }
+
+        /* Badge states */
+        .badge-pass   { background-color: rgba(6,78,59,0.4);  color: #34d399; border-color: rgba(6,78,59,0.3); }
+        .badge-fail   { background-color: rgba(136,19,55,0.4); color: #fb7185; border-color: rgba(136,19,55,0.3); }
+        .badge-done   { background-color: rgba(49,46,129,0.4); color: #a5b4fc; border-color: rgba(49,46,129,0.3); }
+        body.light-theme .badge-pass { background-color: #dcfce7; color: #15803d; border-color: #86efac; }
+        body.light-theme .badge-fail { background-color: #ffe4e6; color: #be123c; border-color: #fda4af; }
+        body.light-theme .badge-done { background-color: #ede9fe; color: #6d28d9; border-color: #c4b5fd; }
+        body.light-theme footer { background-color: #ffffff; border-color: #e2e8f0; }
+    </style>
+</head>
+<body id="app-body" class="min-h-screen flex flex-col selection:bg-indigo-500/30">
+    <header class="nav-bg border-b p-4 flex flex-col gap-3 shadow-sm">
+        <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2 rounded-xl text-white font-bold text-xs shadow-md">IT</div>
+                <div>
+                    <h1 class="text-base font-bold bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">COMP102 Portal</h1>
+                    <p class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Minia University • Faculty of Science</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="toggleThemeEngineMode()" class="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900/40 text-xs font-bold cursor-pointer transition-colors text-main" id="theme-btn">☀️ Light</button>
+                <div id="overall-score-container" class="bg-slate-900/40 border border-slate-800/60 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-emerald-500"><span id="overall-score-txt">0% Passed</span></div>
+            </div>
+        </div>
+        <div class="w-full overflow-x-auto no-scrollbar flex items-center gap-1.5 pt-1" id="navbar-rooms-container"></div>
+    </header>
+    <div class="flex flex-1 justify-center w-full max-w-4xl mx-auto p-4 md:p-6">
+        <main class="w-full flex flex-col">
+            <div class="card-bg border rounded-2xl p-4 mb-5 space-y-1 shadow-sm">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Active Exam Module</span>
+                </div>
+                <h2 id="room-title" class="text-base font-bold text-main tracking-tight">Loading...</h2>
+                <p id="room-meta" class="text-xs text-muted font-medium"></p>
+            </div>
+            <div id="room-score-banner" class="hidden bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 mb-5 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="text-emerald-500 text-xs font-bold">✓ PERFORMANCE EVALUATED:</div>
+                    <div class="text-xs text-main font-semibold" id="room-score-breakdown">You scored 0 items correctly.</div>
+                </div>
+                <div id="room-percentage-badge" class="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">0%</div>
+            </div>
+            <form id="exam-questions-form" onsubmit="event.preventDefault();" class="space-y-4"></form>
+            <div class="card-bg border rounded-2xl p-4 mt-6 flex items-center justify-end gap-2 shadow-sm">
+                <button type="button" onclick="resetCurrentRoom()" class="btn-reset border border-slate-700/80 hover:bg-slate-800/40 text-muted font-medium text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer">Reset Answers</button>
+                <button type="button" onclick="submitCurrentRoom()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer">Submit Room Answers</button>
+            </div>
+        </main>
+    </div>
+<script>
+const examDatabase = {
+    "room_tf": {
+        title: "C++ True/False Questions Bank",
+        meta: "Topics: Loops, Functions, Recursion, Arrays | Total Questions: 35",
+        questions: [
+            { id: "tf_1", type: "tf", text: "1. A while loop always executes at least once.", answer: false },
+            { id: "tf_2", type: "tf", text: "2. A do-while loop always executes at least once.", answer: true },
+            { id: "tf_3", type: "tf", text: "3. A for loop always executes at least once.", answer: false },
+            { id: "tf_4", type: "tf", text: "4. Using a semicolon immediately after the for loop header creates an empty loop.", answer: true },
+            { id: "tf_5", type: "tf", text: "5. Nested loops are allowed in C++.", answer: true },
+            { id: "tf_6", type: "tf", text: "6. The break statement terminates the current loop immediately.", answer: true },
+            { id: "tf_7", type: "tf", text: "7. The continue statement terminates the current loop immediately.", answer: false },
+            { id: "tf_8", type: "tf", text: "8. The continue statement skips the current iteration and moves to the next one.", answer: true },
+            { id: "tf_9", type: "tf", text: "9. An infinite loop can be created using: for (;;)", answer: true },
+            { id: "tf_10", type: "tf", text: "10. A for loop counter variable can only be incremented, not decremented.", answer: false },
+            { id: "tf_11", type: "tf", text: "11. A while loop and a for loop are logically equivalent one can always replace the other.", answer: true },
+            { id: "tf_12", type: "tf", text: "12. The loop body of a do-while is enclosed between do {} and while (condition);", answer: true },
+            { id: "tf_13", type: "tf", text: "13. In a nested loop, the inner loop completes all its iterations for each iteration of the outer loop.", answer: true },
+            { id: "tf_14", type: "tf", text: "14. The break statement inside a nested loop exits all loops at once.", answer: false },
+            { id: "tf_15", type: "tf", text: "15. A void function cannot return a value.", answer: true },
+            { id: "tf_16", type: "tf", text: "16. A void function can return a value.", answer: false },
+            { id: "tf_17", type: "tf", text: "17. A function can modify the original variable if it is passed by reference.", answer: true },
+            { id: "tf_18", type: "tf", text: "18. A function can modify the original variable if it is passed by value.", answer: false },
+            { id: "tf_19", type: "tf", text: "19. A function must always have a return statement.", answer: false },
+            { id: "tf_20", type: "tf", text: "20. Function overloading allows two functions to have the same name but different parameter lists.", answer: true },
+            { id: "tf_21", type: "tf", text: "21. A function prototype must be placed before the function is called.", answer: true },
+            { id: "tf_22", type: "tf", text: "22. Default parameter values must be specified from left to right starting with the first parameter.", answer: false },
+            { id: "tf_23", type: "tf", text: "23. In C++ a function can return only one value directly using the return statement.", answer: true },
+            { id: "tf_24", type: "tf", text: "24. A local variable declared inside a function is accessible outside that function.", answer: false },
+            { id: "tf_25", type: "tf", text: "25. Every recursive function must have a base case to stop the recursion.", answer: true },
+            { id: "tf_26", type: "tf", text: "26. A recursive function that has no base case will cause a stack overflow.", answer: true },
+            { id: "tf_27", type: "tf", text: "27. Recursion can always replace iteration (loops).", answer: true },
+            { id: "tf_28", type: "tf", text: "28. A recursive function cannot call itself more than once in its body.", answer: false },
+            { id: "tf_29", type: "tf", text: "29. The recursive call in a function must move toward the base case.", answer: true },
+            { id: "tf_30", type: "tf", text: "30. Recursive solutions are always more efficient than iterative ones.", answer: false },
+            { id: "tf_31", type: "tf", text: "31. The factorial of 0 is defined as 1, which also serves as the base case for a recursive factorial function.", answer: true },
+            { id: "tf_32", type: "tf", text: "32. A function that calls another function not itself is considered recursive.", answer: false },
+            { id: "tf_33", type: "tf", text: "33. Array indices in C++ start at 0.", answer: true },
+            { id: "tf_34", type: "tf", text: "34. Arrays in C++ can store elements of different data types in the same array.", answer: false },
+            { id: "tf_35", type: "tf", text: "35. Arrays in C++ store elements of the same data type.", answer: true }
+        ]
+    },
+    "room_output": {
+        title: "C++ Write the Output Questions",
+        meta: "Topics: Loops, Arrays, Functions, Recursion | Levels: Easy to Hard",
+        questions: [
+            { id: "out_1", type: "subjective", text: "Q1. Loops (Easy) - Write the output:", code: "for (int i = 1; i <= 5; i++)\n    cout << i << \" \";", modelSolution: "1 2 3 4 5\n\nExplanation: i runs 1→5, prints each value." },
+            { id: "out_2", type: "subjective", text: "Q2. Loops (Easy) - Write the output:", code: "int x = 10;\ncout << x << \" \";\nx -= 3;\ncout << x;", modelSolution: "10 7\n\nExplanation: Prints x=10 then x=10-3=7" },
+            { id: "out_3", type: "subjective", text: "Q3. Arrays (Easy) - Write the output:", code: "int a[] = {5, 10, 15, 20};\ncout << a[0] << \" \" << a[3];", modelSolution: "5 20\n\nExplanation: a[0]=5, a[3]=20." },
+            { id: "out_4", type: "subjective", text: "Q4. Functions (Easy) - Write the output:", code: "int add(int a, int b) { return a + b; }\nint main() {\n    cout << add(4, 6);\n}", modelSolution: "10\n\nExplanation: 4 + 6 = 10" },
+            { id: "out_5", type: "subjective", text: "Q5. Loops (Easy) - Write the output:", code: "for (int i = 0; i < 4; i++) {\n    if (i == 2) break;\n    cout << i << \" \";\n}", modelSolution: "0 1\n\nExplanation: break exits loop when i==2 so only 0 and 1 are printed." },
+            { id: "out_6", type: "subjective", text: "Q6. Loops (Easy) - Write the output:", code: "int i = 1;\nwhile (i <= 8) {\n    cout << i << \" \";\n    i *= 2;\n}", modelSolution: "1 2 4 8\n\nExplanation: i doubles each time: 1→2→4→8→16(16>8, stop)." },
+            { id: "out_7", type: "subjective", text: "Q7. Arrays (Easy) - Write the output:", code: "int arr[] = {3, 6, 9, 12, 15};\nfor (int i = 4; i >= 0; i--)\n    cout << arr[i] << \" \";", modelSolution: "15 12 9 6 3\n\nExplanation: Loop goes backward from index 4 to 0." },
+            { id: "out_8", type: "subjective", text: "Q8. Loops (Medium) - Write the output:", code: "for (int i = 1; i <= 5; i++) {\n    if (i % 2 != 0)\n        continue;\n    cout << i << \" \";\n}", modelSolution: "2 4\n\nExplanation: continue skips odd values; only even numbers are printed." },
+            { id: "out_9", type: "subjective", text: "Q9. Arrays (Medium) - Write the output:", code: "int arr[] = {2, 4, 6, 8, 10};\nfor (int i = 0; i < 5; i++) {\n    if (i % 2 == 0)\n        cout << arr[i] + 1 << \" \";\n}", modelSolution: "3 7 11\n\nExplanation: i=0: arr[0]+1=3, i=2: arr[2]+1=7, i=4: arr[4]+1=11." },
+            { id: "out_10", type: "subjective", text: "Q10. Functions (Medium) - Write the output:", code: "int calc(int a, int b) {\n    return a * b - a;\n}\nint main() {\n    cout << calc(3, 5) << \" \" << calc(2, 4);\n}", modelSolution: "12 6\n\nExplanation: calc(3,5)=15-3=12, calc(2,4)=8-2=6." },
+            { id: "out_11", type: "subjective", text: "Q11. Loops (Medium) - Write the output:", code: "for (int i = 0; i < 4; i++) {\n    for (int j = 0; j <= i; j++)\n        cout << \"* \";\n    cout << endl;\n}", modelSolution: "* \n* * \n* * * \n* * * *\n\nExplanation: Nested loop: outer controls rows, inner prints stars equal to row number." },
+            { id: "out_12", type: "subjective", text: "Q12. Arrays 2D (Medium) - Write the output:", code: "int mat[2][3] = {{1, 2, 3}, {4, 5, 6}};\nfor (int i = 0; i < 2; i++)\n    cout << mat[i][i] << \" \";", modelSolution: "1 5\n\nExplanation: mat[0][0]=1, mat[1][1]=5 (main diagonal)." },
+            { id: "out_13", type: "subjective", text: "Q13. Functions (Medium) - Write the output:", code: "void print(int n) {\n    for (int i = 1; i <= n; i++)\n        cout << i * i << \" \";\n}\nint main() { print(5); }", modelSolution: "1 4 9 16 25\n\nExplanation: Prints squares of 1 to 5." },
+            { id: "out_14", type: "subjective", text: "Q14. Loops (Medium) - Write the output:", code: "int sum = 0;\nfor (int i = 1; i <= 5; i++)\n    sum += i;\ncout << sum;", modelSolution: "15\n\nExplanation: 1+2+3+4+5=15." },
+            { id: "out_15", type: "subjective", text: "Q15. Recursion (Hard) - Write the output:", code: "void count(int n) {\n    if (n == 0) return;\n    cout << n << \" \";\n    count(n - 1);\n    cout << n << \" \";\n}\nint main() { count(3); }", modelSolution: "3 2 1 1 2 3\n\nExplanation: Prints n before AND after the recursive call prints going down then coming back up." },
+            { id: "out_16", type: "subjective", text: "Q16. Functions (Hard) - Write the output:", code: "void modify(int &a, int b) {\n    a = a + b;\n    b = b * 2;\n}\nint main() {\n    int x = 5, y = 3;\n    modify(x, y);\n    cout << x << \" \" << y;\n}", modelSolution: "8 3\n\nExplanation: x passed by reference → x=5+3=8. y passed by value, original y unchanged=3." },
+            { id: "out_17", type: "subjective", text: "Q17. Recursion (Hard) - Write the output:", code: "int mystery(int n) {\n    if (n <= 1) return 1;\n    return mystery(n-1) + mystery(n-2);\n}\nint main() {\n    for (int i = 1; i <= 6; i++)\n        cout << mystery(i) << \" \";\n}", modelSolution: "1 2 3 5 8 13\n\nExplanation: This is the Fibonacci sequence. mystery(n) = mystery(n-1) + mystery(n-2)." },
+            { id: "out_18", type: "subjective", text: "Q18. Arrays 2D (Hard) - Write the output:", code: "int mat[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\nfor (int i = 0; i < 3; i++)\n    cout << mat[i][2-i] << \" \";", modelSolution: "3 5 7\n\nExplanation: i=0→mat[0][2]=3, i=1→mat[1][1]=5, i=2→mat[2][0]=7 (anti-diagonal)." },
+            { id: "out_19", type: "subjective", text: "Q19. Recursion (Hard) - Write the output:", code: "int power(int base, int exp) {\n    if (exp == 0) return 1;\n    return base * power(base, exp - 1);\n}\nint main() {\n    cout << power(2, 5) << \" \" << power(3, 3);\n}", modelSolution: "32 27\n\nExplanation: power(2,5) = 2^5 = 32. power(3,3) = 3^3 = 27." },
+            { id: "out_20", type: "subjective", text: "Q20. Loops + Arrays (Hard) - Write the output:", code: "int arr[] = {1, 2, 3, 4, 5};\nint result = 1;\nfor (int i = 0; i < 5; i++) {\n    if (arr[i] % 2 != 0)\n        result *= arr[i];\n}\ncout << result;", modelSolution: "15\n\nExplanation: Odd elements: 1, 3, 5 → 1×3×5=15." }
+        ]
+    },
+    "room_2025": {
+        title: "Academic Year: 2024/2025 (Final Exam)",
+        meta: "Program: IT | Level: 1st Level | Date: 26-05-2025 | Time: 2 hours",
+        questions: [
+            { id: "25_q1", type: "mcq", text: "1- What's wrong?", code: "for (int k=2, k<=12, k++)", options: ["A) The increment should always be ++k", "B) There should be a semicolon at the end of the statement", "C) The commas should be semicolons", "D) The variable must always be the letter i when using a for loop"], answer: 2 },
+            { id: "25_q2", type: "mcq", text: "2- What's wrong?", code: "while ((i<10) && (i>24))", options: ["A) The test condition is always true", "B) The logical operator && cannot be used in a test condition", "C) The test condition is always false", "D) The while loop is an exit-condition loop"], answer: 2 },
+            { id: "25_q3", type: "mcq", text: "3- Which one of the following for loops is an infinite loop?", options: ["A) for (int c=0; c <= 100; c++) cout << c;", "B) for (int c=0; c>=100; c++) cout << c;", "C) for (int c=0; c<=100; c--) cout << c;", "D) for (int c=0; c>=100; c--) cout << c;"], answer: 2 },
+            { id: "25_q4", type: "mcq", text: "4- How many times will this loop execute?", code: "for (int i=1; i<=10; i+=2) {\n    cout << i << \" \";\n}", options: ["A) 5", "B) 6", "C) 10", "D) Infinite"], answer: 0 },
+            { id: "25_q5", type: "mcq", text: "5- How many times will \"Hello\" be printed?", code: "for (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 2; j++) {\n        cout << \"Hello\";\n    }\n}", options: ["A) 2", "B) 3", "C) 10", "D) 6"], answer: 3 },
+            { id: "25_q6", type: "mcq", text: "6- What is the output of the following code?", code: "int i=1;\nwhile (i<=2) {\n    int j=1;\n    do {\n        cout << i + j << \" \";\n        j++;\n    } while (j<=2);\n    i++;\n}", options: ["A) 223", "B) 2334", "C) 234", "D) 2345"], answer: 1 },
+            { id: "25_q7", type: "mcq", text: "7- What is the output of the following code?", code: "int x;\nfor (x=5; x <= 14 ; x += 3)\n    cout << x << \" \";", options: ["A) 11", "B) 13 14", "C) 5 8 11 14", "D) 17"], answer: 2 },
+            { id: "25_q8", type: "mcq", text: "8- How many times does the cout statement in the following code execute?", code: "int a=2; int b=6;\nwhile(a<=10){\n    for(int b = 0; b<4; b=b+1) {\n        cout << a << \" \" << b << \" \";\n        a=a+1;\n    }\n}", options: ["A) 0", "B) 8", "C) 12", "D) 24"], answer: 2 },
+            { id: "25_q9", type: "mcq", text: "9- What is the output of the following code?", code: "for(int x=8; x>=5; x=x-1)\n   cout << x << \" \";", options: ["A) 8 7 6 5", "B) 8 7 6", "C) 7 6 5", "D) 5 6 7 8"], answer: 0 },
+            { id: "25_q10", type: "mcq", text: "10- What is the last number will be printed?", code: "int x;\nfor (int x = 5; x <= 14; x+=3) {\n    cout << x << endl;\n    cout << x << endl;\n}", options: ["A) 11", "B) 13", "C) 14", "D) 17"], answer: 2 },
+            { id: "25_q11", type: "mcq", text: "11- What is the output of the following code?", code: "int U=8, L=2;\nint num1, num2, num3 = U, num4 = L;\nnum1 = num3; num2 = num4;\ncout << num1 << \" \" << num2 << endl;", options: ["A) 8 2", "B) 2 8", "C) 8 8", "D) 2 2"], answer: 0 },
+            { id: "25_q12", type: "mcq", text: "12- What is the output of the following code?", code: "int y, x = 1, total = 0;\nwhile(x <= 5) {\n    y = x * x;\n    total += y;\n    ++x;\n}\ncout << total;", options: ["A) 15", "B) 50", "C) 55", "D) 100"], answer: 2 },
+            { id: "25_q13", type: "mcq", text: "13- What is the output of the following code?", code: "int x=2;\nswitch (x) {\n    case 1: cout << \"1\";\n    case 2: cout << \"2\";\n    case 3: cout << \"3\";\n    default: cout << \"Default\";}", options: ["A) 2", "B) 23 Default", "C) 2 Default", "D) error"], answer: 1 },
+            { id: "25_q14", type: "mcq", text: "14- What is last value that will be printed?", code: "int n = 8;\nfor(int i = 1; i <= n; i++){\n    cout << \"good\" << i << endl;\n    i += 2;\n}", options: ["A) good2", "B) good6", "C) good7", "D) good8"], answer: 2 },
+            { id: "25_q15", type: "mcq", text: "15- What is the last value that will be printed?", code: "int n = 5; bool flag = true;\nfor(int i = 1; i < n; i++) {\n    if(flag)\n        cout << \"good \" << i << endl;\n    else\n        cout << \"bad \" << i << endl;\n    flag = !flag;\n}", options: ["A) good 1", "B) bad 4", "C) good 3", "D) bad 2"], answer: 1 },
+            { id: "25_q16", type: "mcq", text: "16- What is the 3rd value that will be printed?", code: "int x = 1, y = 8;\nwhile(x < y){\n    cout << x << \" hala \" << y << endl;\n    x++;\n    y--;\n}", options: ["A) 3 hala 6", "B) 2 hala 7", "C) 1 hala 8", "D) 4 hala 5"], answer: 0 },
+            { id: "25_q17", type: "mcq", text: "17- What is the output of the following code?", code: "int i = 0, n = 5;\nwhile(i < n){\n    cout << i++;\n    i++;\n}", options: ["A) 012345", "B) 0135", "C) 013", "D) 024"], answer: 3 },
+            { id: "25_q18", type: "mcq", text: "18- What is the output of the following code?", code: "for (int i=0; i < 3; i++) {\n    for (int j = 0; j < 2; j++) {\n        cout << i*j << \" \"; } }", options: ["A) 0 0 0 1 0 2", "B) 0 1 0 2 0 3", "C) 0 0 1 1 2 2", "D) 0 0 0 1 1 1 0"], answer: 0 },
+            { id: "25_q19", type: "mcq", text: "19- What is the output of the following code?", code: "int x = 12910;\nwhile(x != 0){\n    cout << x % 10;\n    x = x / 10;\n}\ncout << x;", options: ["A) 012910", "B) 029110", "C) 019210", "D) 011290"], answer: 2 },
+            { id: "25_q20", type: "mcq", text: "20- What is the output of the following code?", code: "int cry(int &n) {\n    n++;\n    return n*2;\n}\nint fetcher(int num) {\n    if(num%2==0)\n        return cry(num)+num;\n    else\n        return cry(num)-num;\n}\nvoid main() {\n    for(int i=1;i<=6;i++) {\n        cout << fetcher(i) << \" \";\n    }\n}", options: ["A) 24195621", "B) 21945621", "C) 29415621", "D) 29412561"], answer: 2 },
+            { id: "25_q21", type: "mcq", text: "21- What is the output of the following code?", code: "for(int i=1;i!=4;i++)\n    cout<<i<<\" \";", options: ["A) 123", "B) 1234", "C) 13", "D) 24"], answer: 0 },
+            { id: "25_q22", type: "mcq", text: "22- What is the output of the following code?", code: "int n=7, x=4, sum=0;\nfor (int i=1;i<x;i++){\n    for (int j=1;j<n;j++)\n        sum=sum+j;\n    if (i==x-2) {\n        int temp = n; n=x; x=temp; } }\ncout << sum;", options: ["A) 55", "B) 60", "C) 75", "D) 100"], answer: 1 },
+            { id: "25_q23", type: "mcq", text: "23- What is the output of the following code?", code: "int bar(int x) {\n    return (x>0)?x+bar(x-1):0;}\nint main() {\n    cout << bar(4);\n    return 0;}", options: ["A) 4", "B) 6", "C) 10", "D) 12"], answer: 2 },
+            { id: "25_q24", type: "mcq", text: "24- What is the output of the following code?", code: "int func(int x) { return x*2; }\ndouble func(double x) { return x*3; }\nvoid main() {\n    cout << func(5) << \" \" << func(5.0); }", options: ["A) 10 15", "B) 10 15.0", "C) 10.0 15.0", "D) error"], answer: 0 },
+            { id: "25_q25", type: "mcq", text: "25- What is the output of the following code?", code: "int sum=0, n=5;\nfor(int i=1;i<n;i++){\n    cout<<sum<<\" \";\n    sum=sum*10+7;}", options: ["A) 0 7 77 777", "B) 0 7 77 000", "C) 0 0 00 777", "D) 0 7 00 777"], answer: 0 }
+        ]
+    },
+    "room_2024": {
+        title: "Academic year: 2023/2024 (COMP102)",
+        meta: "Minia University | Date: 5/6/2024 | Semester: 2nd Semester | Time allowed: 2 hours",
+        questions: [
+            { id: "24_t1", type: "tf", text: "1. The break statement in a nested loop only exits the innermost loop.", answer: true },
+            { id: "24_t2", type: "tf", text: "2. When passing a parameter by reference to a function, the memory location of the variable is passed, allowing the function to use and modify the same memory area.", answer: true },
+            { id: "24_t3", type: "tf", text: "3. The substr() function can return a substring starting from a given position with a specified length.", answer: true },
+            { id: "24_t4", type: "tf", text: "4. The do-while loop determines whether to start executing the loop's code at least once, while the while loop determines whether to repeat the code.", answer: false },
+            { id: "24_t5", type: "tf", text: "5. It is possible to have a function that takes a parameter by reference and another by value.", answer: true },
+            { id: "24_t6", type: "tf", text: "6. The continue statement immediately exits the loop and proceeds to the next iteration.", answer: false },
+            { id: "24_t7", type: "tf", text: "7. The statement \"for (int Count = 0; Count < 2; Count++)\" has the same effect as \"for (int Inner = 1; Inner <= 2; Inner++)\".", answer: true },
+            { id: "24_t8", type: "tf", text: "8. When a local variable has the same name as a global variable, the local variable takes precedence within its scope.", answer: true },
+            { id: "24_t9", type: "tf", text: "9. To iterate through an array of 9 elements in reverse order, the loop for (int i=9; i>=0; i--) is used.", answer: false },
+            { id: "24_t10", type: "tf", text: "10. The declaration int a[5][10]; in C++ creates a two-dimensional integer array with 10 rows and 5 columns.", answer: false },
+            { id: "24_t11", type: "tf", text: "11. A variable declared within a nested block is accessible from the outer block.", answer: false },
+            { id: "24_t12", type: "tf", text: "12. Arrays in C++ are zero-indexed, meaning the first element is accessed with index 1.", answer: false },
+            { id: "24_t13", type: "tf", text: "13. The correct syntax for a for loop is \"for(initialization, condition, increment/decrement)\".", answer: false },
+            { id: "24_t14", type: "tf", text: "14. Infinite loops can only be created using while loops, not for loops.", answer: false },
+            { id: "24_t15", type: "tf", text: "15. You can assign a two-dimensional array to another using the = operator like \"arr2 = arr1;\".", answer: false },
+            { id: "24_q2_a", type: "subjective", text: "Question 2 (a): Write a C++ program that ask user to input an array of 10 positive integer numbers. Then find and print the array element and its frequency if it has an odd number of occurrences in the given array. Note: avoid counting the same element multiple times by marking the counted elements as -1 after processing.<br><br>Example Input: {5, 7, 8, 2, 8, 5, 8, 7, 2, 7}<br>Output:<br>Number: 7, Frequency: 3<br>Number: 8, Frequency: 3", modelSolution: `#include <iostream>\nusing namespace std;\nint main() {\n    int arr[10]; int freq[10];\n    for(int i=0; i<10; i++) { cin >> arr[i]; freq[i] = 1; }\n    for(int i=0; i<10; i++) {\n        if(arr[i] != -1) {\n            for(int j=i+1; j<10; j++) {\n                if(arr[i] == arr[j]) { freq[i]++; arr[j] = -1; }\n            }\n            if(freq[i] % 2 != 0) cout << "Number: " << arr[i] << ", Frequency: " << freq[i] << endl;\n        }\n    }\n    return 0;\n}` },
+            { id: "24_q2_b", type: "subjective", text: "b) Write a function that takes a string as a parameter, reverses the given string, and returns the reversed string.", modelSolution: `string reverseString(string str) {\n    int n = str.length();\n    for (int i = 0; i < n / 2; i++) swap(str[i], str[n - i - 1]);\n    return str;\n}` },
+            { id: "24_q3_a1", type: "subjective", text: "Question 3 (a) Show the output of the following programs:<br>I.", code: "void main() {\n    int n=4;\n    for (int I = 0; I < n; I++)\n    {\n        for (int c = 0; c < 2*n-3; c++)\n        {\n            int first = n - I - 1;\n            int last = n - I + 1;\n            if (c < first || c > last) {\n                cout << \"-\"; }\n            else {\n                cout << \"*\"; }\n        }\n        cout << endl;\n    }\n}", modelSolution: `---**\n--***\n-***-\n***--\n\nNote: the loop runs c from 0 to 2*n-3 (i.e. 0..4, only 5 columns). For each row: first = n-I-1, last = n-I+1, and a '*' is printed only when first <= c <= last, otherwise '-'.` },
+            { id: "24_q3_a2", type: "subjective", text: "II.", code: "void main()\n{\n    for (int n = 2; n <= 3; n++)\n    {\n        int p = 1;\n        for (int i = 1; i <= 3; i++)\n            p = p * n;\n        cout << p;\n        cout << endl;\n    }\n}", modelSolution: `8\n27` }
+        ]
+    },
+    "room_2023": {
+        title: "Academic year: 2022/2023 (COMP102)",
+        meta: "Date: 17/6/2023 | Time allowed: 2 hours | Level: 1st",
+        questions: [
+            { id: "23_q1_a", type: "subjective", text: "Question 1 Show the output of the following programs:<br>a)", code: "void main() {\n    int num = 4;\n    int i = 2;\n    while (i <= 4)\n    {\n        for (int j = 1; j < i + 3; j += 3)\n        {\n            cout << num << \" \";\n        }\n        num *= 2;\n        cout << endl;\n        i++;\n    }\n}", modelSolution: `4 4 \n8 8 \n16 16 \n\nExplanation: the inner loop "for(j=1; j<i+3; j+=3)" runs twice every row (j=1 then j=4), so num is printed twice per line. num starts at 4 and doubles each row: 4 4 / 8 8 / 16 16.` },
+            { id: "23_q1_b", type: "subjective", text: "b)", code: "void main() {\n    int Control = 2;\n    int Sum = 0;\n    while (Control < 5)\n    {\n        for (int Inner = 1; Inner <= 2; Inner++)\n        {\n            Sum = Sum + Control;\n        }\n        Control = Control + Control;\n    }\n    cout << \"Control=\" << Control << \", \" << \"Sum=\" << Sum << endl;\n}", modelSolution: `Control=8, Sum=12` },
+            { id: "23_q1_c", type: "subjective", text: "c)", code: "int sub1(int &n) {\n    n--;\n    return n;\n}\nvoid main() {\n    int m = 10;\n    for(int j = 0; j < 10; j++)\n        m -= sub1(j);\n    cout << m << \"\\n\";\n}", modelSolution: `Output: m starts at 10. Each iteration: j decrements itself via reference, so j becomes j-1 before returning, then for-loop does j++.\nAfter tracing: Output is -35` },
+            { id: "23_q1_d", type: "subjective", text: "d)", code: "void main() {\n    int a=1, b=4, z;\n    int i = 2;\n    while (a < b)\n    {\n        a=2*a;\n        b=b+1;\n    }\n    z=b;\n    cout<< z;\n}", modelSolution: `Output: 5\n(a starts 1, b starts 4: iter1: a=2,b=5 → a<b false → z=5 → cout 5)` },
+            { id: "23_q2_a1", type: "subjective", text: "Question 2 a) Rewrite the following program fragment using:<br>1- For instead of While:", code: "int i = -2;\nint s=5;\nwhile (i<= s){\n    i = i + 2;\n    cout << (I + s) << endl;\n    s--;\n}", modelSolution: `for(int i=-2, s=5; i<=s; i+=2, s--) {\n    cout << (i + s) << endl;\n}` },
+            { id: "23_q2_a2", type: "subjective", text: "2- do-while instead of for:", code: "for (int n=4; n>=0; n--)\n    cout << n << endl;", modelSolution: `int n=4;\ndo {\n    cout << n << endl;\n    n--;\n} while (n>=0);` },
+            { id: "23_q2_b", type: "subjective", text: "b) Complete the following C++ program which finds the sum of the right and left diagonals of an array.", code: "#include <iostream>\nusing namespace std;\nVoid main()\n{\n    int matrix[3][3];\n    int sum_left=0, sum_right=0;\n    cout << \"Enter elements into the matrix\\n\";\n    // Input matrix\n    // ...\n    for(___________)\n        for(___________)\n        {\n            // find the sum of left diagonal\n            if(___________)\n                ___________;\n            // find the sum of right diagonal\n            if(___________)\n                ___________;\n        }\n    cout << \"Sum of Left Diagonal: \" << ___________ << endl;\n    cout << \"Sum of Right Diagonal: \" << ___________ << endl;\n}", modelSolution: `for(int i=0; i<3; i++)\n    for(int j=0; j<3; j++)\n        cin >> matrix[i][j];\nfor(int i=0; i<3; i++)\n    for(int j=0; j<3; j++) {\n        if(i==j) sum_left += matrix[i][j];\n        if(i+j==2) sum_right += matrix[i][j];\n    }\ncout << "Sum of Left Diagonal: " << sum_left << endl;\ncout << "Sum of Right Diagonal: " << sum_right << endl;` },
+            { id: "23_q3_a", type: "subjective", text: "Question 3 a) Write a function <u>iseven</u> that accepts an integer value, then returns true if the value is even, or false if the value is odd.", modelSolution: `bool iseven(int n) {\n    return (n % 2 == 0);\n}` },
+            { id: "23_q3_b", type: "subjective", text: "b) Write a function check_num that accepts an integer value, then returns true if the number consists of two digits otherwise returns false.", modelSolution: `bool check_num(int n) {\n    return (n >= 10 && n <= 99);\n}` },
+            { id: "23_q3_c", type: "subjective", text: "c) Write a main program that:<br>1. Reads some numbers from user until the user enters a number that doesn't consist of two digits. (Hint: use check_num)<br>2. Prints the count of even numbers that the user entered. (Hint: use iseven)", modelSolution: `int main() {\n    int num, count = 0;\n    cin >> num;\n    while(check_num(num)) {\n        if(iseven(num)) count++;\n        cin >> num;\n    }\n    cout << "Count of even numbers: " << count << endl;\n    return 0;\n}` }
+        ]
+    },
+    "room_2022": {
+        title: "Academic year: 2021/2022 (COMP102)",
+        meta: "Date: 18/6/2022 | Time allowed: 2 hours | Total Marks: 50 marks",
+        questions: [
+            { id: "22_q1", type: "mcq", text: "1. How many times \"Ankit\" is get printed?", code: "int main()\n{\n    int x;\n    for(x=-1; x <=10; x++)\n        if (x<5)\n            continue;\n        else\n            break;\n    cout<<(\"Ankit\");\n    return 0;\n}", options: ["A. Infinite times", "B. 11 times", "C. 0 times", "D. 10 times"], answer: 2 },
+            { id: "22_q2", type: "mcq", text: "2. What is the output of C++ Program?", code: "int main()\n{\n    int a=32;\n    do\n    {\n        cout << (a);\n        a++;\n        if(a>35)\n            break;\n    } while(1);\n    return 0;\n}", options: ["A. No Output", "B. 32 33 34", "C. 32 33 34 35", "D. Compiler error"], answer: 2 },
+            { id: "22_q3", type: "mcq", text: "3. What will happen while using pass by reference?", options: ["A. The values of those variables are passed to the function so that it can manipulate them", "B. The function declaration should not contain ampersand (&).", "C. The location of variable in memory is passed to the function so that it can use the same memory area for its processing.", "D. None of above"], answer: 2 },
+            { id: "22_q4", type: "mcq", text: "4. After execution, what are the values for i and j?", code: "void main() {\n    int i=1, j=10;\n    do {\n        if (i++ > --j)\n            continue;\n    } while (i<5);\n}", options: ["A. i=6 and j=5", "B. i=5 and j=5", "C. i=6 and j=4", "D. i=5 and j=6", "E. i=6 and j=6"], answer: 3 },
+            { id: "22_q5", type: "mcq", text: "5. What would be printed by the following statements?", code: "int y[3][3]={1,2,3,\n             4, 5, 6,\n             7, 8, 9};\ncout<<y[1][2];", options: ["A. 6", "B. 2", "C. 4", "D. 5"], answer: 0 },
+            { id: "22_q6", type: "mcq", text: "6. Find out the error in following block of code.", code: "if (x = 100)\n    cout << \"x is 100\";", options: ["A. 100 should be enclosed in quotations", "B. There is no semicolon at the end of first line", "C. Variable x should not be inside quotation", "D. Equals to operator mistake"], answer: 3 },
+            { id: "22_q7", type: "mcq", text: "7. Which Boolean expression is equivalent to: \"the cat has rabies and does not weight 20 pounds or less\"?<br>Bool catRabies; double catWeight;", options: ["A. (catRabies != true) && (catWeight>=20)", "B. (catWeight<20.0)||(catRabies==true)", "C. !(catRabies==true)&&(catWeight<=20)", "D. (catRabies == true) && (catWeight > 20.0)", "E. None of the above"], answer: 3 },
+            { id: "22_q8", type: "mcq", text: "8. What will be the output of the following C++ code?", code: "void main () {\n    int array[] = {0, 2, 4, 6, 7, 5, 3};\n    int n, result = 0;\n    for (n=0; n < 7; n++)\n    {\n        result += 2*(array[n]-1); }\n    cout << result;\n}", options: ["A. 20", "B. 27", "C. 47", "D. 40"], answer: 3 },
+            { id: "22_q9", type: "mcq", text: "9. What would be printed by the following program?", code: "#include <iostream>\nusing namespace std;\nint sub1(int n)\n{\n    n--;\n    return n;\n}\nint main()\n{\n    int m = 10;\n    for(int j = 0; j < 10; j++)\n        m -= sub1(j);\n    cout << m << \"\\n\";\n    return 0;\n}", options: ["A. 0", "B. 11", "C. 10", "D. None of the above."], answer: 3 },
+            { id: "22_q10", type: "mcq", text: "10. Which of the following C++ statements would have the same effect as the line:<br>\"for(int Inner =1; Inner<=2; Inner++)\"?", options: ["A. int Inner = 1; while (Inner<=3)", "B. for (int Inner=2; Inner > 0; Inner++)", "C. int Count = 2;  while (Count-1 > 0)", "D. for (int Count = 0; Count < 2; Count++)"], answer: 3 },
+            { id: "22_q2a", type: "subjective", text: "Question 2 a) Find the errors in the following program segments and correct them:<br><br><b>Segment 1:</b> <code>int a[5]={10,20,30,40,50}; cout&lt;&lt; a[5];</code><br><b>Segment 2:</b> <code>void Add(int x, int y) { int z=x; x=y; y=z; return z; }</code><br><b>Segment 3:</b> <code>Int x=1; do { total+=x; x++; } while(x&lt;=10)</code><br><b>Segment 4:</b> <code>int Sub(int a, int b) { return a+b; } Void main() { intSub(5,10) }</code><br><b>Segment 5:</b> <code>int x=1; while(x&lt;=10); { cout&lt;&lt;x; x++; }</code><br><b>Segment 6:</b> <code>int fun(int x, int y) { int result; result=x+y; }</code>", modelSolution: `Segment 1: a[5] is out of bounds → fix: cout << a[4];
+Segment 2: void should be int (returns z); also swap logic swaps x,y but returns z=original x. Return type error.
+Segment 3: Int → int (capital I); missing semicolon after while(x<=10)
+Segment 4: Void → void; intSub(5,10) → Sub(5,10)
+Segment 5: Semicolon after while(x<=10) creates infinite empty loop → remove it
+Segment 6: Missing return statement → add: return result;` },
+            { id: "22_q2b_i", type: "subjective", text: "Question 2 b) i. Write a function called IncrementCounter() that accepts an integer value (C) then increase the value of C by one. The function should return no value.", modelSolution: `void IncrementCounter(int &C) {\n    C++;\n}` },
+            { id: "22_q2b_ii", type: "subjective", text: "ii. Write a C++ program that reads 10 integers from the user and stores them in a one-dimensional array. Then find and print:<br>1. The max value of that array and its index within the array.<br>2. The frequency of the most repeating element in the array. (Hint: use IncrementCounter())<br><br>Example: Array = {1,2,3,10,1,5,20,1,9,1} → Most repeated: 1, frequency: 4 | Max: 20, index: 6", modelSolution: `void IncrementCounter(int &C) { C++; }\nint main() {\n    int arr[10], maxVal, maxIdx=0, maxFreq=0;\n    for(int i=0; i<10; i++) cin >> arr[i];\n    maxVal = arr[0];\n    for(int i=1; i<10; i++)\n        if(arr[i] > maxVal) { maxVal=arr[i]; maxIdx=i; }\n    for(int i=0; i<10; i++) {\n        int count=0;\n        for(int j=0; j<10; j++)\n            if(arr[j]==arr[i]) IncrementCounter(count);\n        if(count > maxFreq) { maxFreq=count; }\n    }\n    cout << "Max element is: " << maxVal << "  index: " << maxIdx << endl;\n    cout << "Most repeated frequency: " << maxFreq << endl;\n    return 0;\n}` },
+            { id: "22_q3a", type: "subjective", text: "Question 3 a) Rewrite the following program using a do-while statement instead of while statement:", code: "void main()\n{\n    int n;\n    int count = 0;\n    cout<<\"enter the even value or odd value to stop\"<<endl;\n    cin >> n;\n    int sum = 0;\n    while (n%2 == 0)\n    {\n        sum += n;\n        count++;\n        cout <<\"enter the even value or odd value to stop\" << endl;\n        cin >> n;\n    }\n    cout <<\"sum= \"<< sum<<\" count= \"<< count;\n}", modelSolution: `void main() {\n    int n, count=0, sum=0;\n    do {\n        cout << "enter the even value or odd value to stop" << endl;\n        cin >> n;\n        if(n%2 == 0) { sum += n; count++; }\n    } while(n%2 == 0);\n    cout << "sum= " << sum << " count= " << count;\n}` },
+            { id: "22_q3b", type: "subjective", text: "Question 3 b) Rewrite the following if statement using a switch statement:", code: "if (a == 1)\n    x += 10;\nelse if (a == 2)\n    x += 20;\nelse if (a == 3 || x == 4)\n    x += 30;\nelse if (a == 5)\n    x += 40;\nelse\n    x += a;", modelSolution: `switch(a) {\n    case 1: x += 10; break;\n    case 2: x += 20; break;\n    case 3:\n    case 4: x += 30; break;  // Note: original uses x==4 not a==4\n    case 5: x += 40; break;\n    default: x += a;\n}` },
+            { id: "22_q3c", type: "subjective", text: "Question 3 c) Complete the following C++ program which finds the sum of the right and left diagonals of an array.", code: "#include <iostream>\nusing namespace std;\nVoid main()\n{\n    int matrix[3][3];\n    int sum_left=0, sum_right=0;\n    cout << \"Enter elements into the matrix\\n\";\n    // fill in the blanks\n    for(____________)\n        for(____________)\n        {\n            if(____________)\n                ____________;\n            if(____________)\n                ____________;\n        }\n    cout << \"Sum of Left Diagonal: \"<< ____________ << endl;\n    cout << \"Sum of Right Diagonal: \"<< ____________ << endl;\n}", modelSolution: `for(int i=0; i<3; i++)\n    for(int j=0; j<3; j++)\n        cin >> matrix[i][j];\nfor(int i=0; i<3; i++)\n    for(int j=0; j<3; j++) {\n        if(i == j) sum_left += matrix[i][j];\n        if(i+j == 2) sum_right += matrix[i][j];\n    }\ncout << "Sum of Left Diagonal: " << sum_left << endl;\ncout << "Sum of Right Diagonal: " << sum_right << endl;` }
+        ]
+    },
+    "room_2021": {
+        title: "Academic year: 2020/2021 (COMP102) - Summer",
+        meta: "Computer Science Dept | Date: 29/9/2021 | Semester: Summer | Time allowed: 2 hours",
+        questions: [
+            { id: "21_q1", type: "mcq", text: "Question 1:<br>1. What would be printed by the following statements?", code: "int y[3][3] = {1, 2, 3,\n               4, 5, 6,\n               7, 8, 9};\ncout << y[1][2];", options: ["a) 5", "b) 6", "c) 2", "d) 4"], answer: 1 },
+            { id: "21_q2", type: "mcq", text: "2. What statement should be in the place of // Iterate to process the array of ten elements?", options: ["a) for (int i = 10; i > 0; i--)", "b) for (int i=0; i < 10; i++)", "c) Both A and B", "d) None of above"], answer: 2 },
+            { id: "21_q3", type: "mcq", text: "3. How many times \"Ankit\" is get printed?", code: "int main()\n{\n    int x;\n    for(x=-1; x<=10; x++)\n        if (x<5)\n            continue;\n        else\n            break;\n    cout<<(\"Ankit\");\n    return 0;\n}", options: ["a) Infinite times.", "b) 11 times", "c) 0 times", "d) 10 times"], answer: 2 },
+            { id: "21_q4", type: "mcq", text: "4. What is the output of C++ program?", code: "int main()\n{\n    int a=32;\n    do\n    {\n        cout << (a);\n        a++;\n        if(a>35)\n            break;\n    } while(1);\n    return 0;\n}", options: ["a) No output.", "b) 32 33 34", "c) 32 33 34 35", "d) Compiler error."], answer: 2 },
+            { id: "21_q5", type: "mcq", text: "5. Find out the error in following block of code.", code: "If (x = 100)\n    Cout << \"x is 100\";", options: ["a) 100 should be enclosed in quotations.", "b) There is no semicolon at the end of first line.", "c) Equals to operator mistake.", "d) Variable x should not be inside quotation."], answer: 2 },
+            { id: "21_q6", type: "mcq", text: "6. Which is an incorrect initialization?", options: ["a) char plant[] = \"Tree\";", "b) char plant[] = {'T','R','E','E'};", "c) char plant[80] = \"Tree\";", "d) None of the above."], answer: 3 },
+            { id: "21_q7", type: "mcq", text: "7. Which Boolean expression is equivalent to the statement: \"the cat height and the dog height are not 10\"?<br>catHeight and dogHeight are declared as: int catHeight; int dogHeight;", options: ["a) !(catHeight == 10) || !(dogHeight ==10)", "b) (catHeight != 10) && (dogHeight >=10)", "c) !((catHeight != 10) && (dogHeight !=10))", "d) ((catHeight != 10) && (dogHeight != 10))"], answer: 3 },
+            { id: "21_q8", type: "mcq", text: "8. Which of the following C++ statements would have the same effect as the line:<br>\"for(int Inner =1; Inner<=2; Inner++)\"?", options: ["a) int Inner = 1; while (Inner<=3)", "b) for (int Inner=2; Inner > 0; Inner++)", "c) int Count = 2;  while (Count-1 > 0)", "d) for (int Count = 0; Count < 2; Count++)"], answer: 3 },
+            { id: "21_q2a", type: "subjective", text: "Question 2 a) Write a C++ programs that reads 10 integers numbers from the user and stores them in a one-dimensional array. Then print:<br>i. The max value of that array and its location within the array.<br>ii. All unique elements in an array.<br>iii. The array in a reverse order.", modelSolution: `int main() {\n    int arr[10], maxVal, maxIdx=0;\n    for(int i=0; i<10; i++) cin >> arr[i];\n    // i. Max value\n    maxVal=arr[0];\n    for(int i=1; i<10; i++)\n        if(arr[i]>maxVal){maxVal=arr[i]; maxIdx=i;}\n    cout<<"Max: "<<maxVal<<" at index "<<maxIdx<<endl;\n    // ii. Unique elements\n    cout<<"Unique: ";\n    for(int i=0; i<10; i++) {\n        bool unique=true;\n        for(int j=0;j<i;j++) if(arr[j]==arr[i]){unique=false;break;}\n        if(unique) cout<<arr[i]<<" ";\n    }\n    cout<<endl;\n    // iii. Reverse\n    cout<<"Reverse: ";\n    for(int i=9; i>=0; i--) cout<<arr[i]<<" ";\n    return 0;\n}` },
+            { id: "21_q2b", type: "subjective", text: "b) Find the errors in the following program segments and correct them:<br><br><b>Segment 1:</b> <code>int a[5]={10,20,30,40,50,60}; cout&lt;&lt;a[7];</code><br><b>Segment 2:</b> <code>for(y=0.1; y!=1.0; y+=0.1) cout&lt;&lt;\"\\n\"&lt;&lt;y;</code><br><b>Segment 3:</b> <code>Int x=1; do { total+=x; x++; } while(x&lt;=10)</code><br><b>Segment 4:</b> <code>int b[10]; for(int i=0; i&lt;=10; i++) b[i]=1;</code><br><b>Segment 5:</b> <code>int x=1; while(x&lt;=10); { cout&lt;&lt;x; x++; }</code><br><b>Segment 6:</b> <code>// determine if x is not greater than 20: if(!x&gt;20); cout&lt;&lt;x</code>", modelSolution: `Seg 1: Array size is 5 but 6 initializers; also a[7] is out of bounds → fix: int a[6]={...}; cout<<a[5];
+Seg 2: Floating point comparison y!=1.0 is unreliable → fix: use y<1.0
+Seg 3: Int → int; missing semicolon after while(x<=10)
+Seg 4: i<=10 goes out of bounds for b[10] → fix: i<10
+Seg 5: Semicolon after while(x<=10) creates infinite empty loop → remove it
+Seg 6: !x>20 is wrong (! applies to x first) → fix: if(!(x>20)) cout<<x;` },
+            { id: "21_q3a", type: "subjective", text: "Question 3 a) Write a C program to input electricity unit charge and calculate the total electricity bill according to the given condition:<br>- For first 50 units: Rs. 0.50/unit<br>- For next 100 units: Rs. 0.75/unit<br>- For next 100 units: Rs. 1.20/unit<br>- For unit above 250: Rs. 1.50/unit<br>- An additional surcharge of 20% is added to the bill.", modelSolution: `int main() {\n    float units, bill=0;\n    cin >> units;\n    if(units <= 50) bill = units * 0.50;\n    else if(units <= 150) bill = 50*0.50 + (units-50)*0.75;\n    else if(units <= 250) bill = 50*0.50 + 100*0.75 + (units-150)*1.20;\n    else bill = 50*0.50 + 100*0.75 + 100*1.20 + (units-250)*1.50;\n    bill += bill * 0.20;\n    cout << "Total Bill: " << bill << endl;\n    return 0;\n}` },
+            { id: "21_q3b1", type: "subjective", text: "Question 3 b) Show the output of the following programs:<br>1-", code: "void main ()\n{\n    int x=1, y=1;\n    int total=0;\n    while( x <= 10 )\n    {\n        y = x * x;\n        cout<<y<<\"\\n\";\n        total += y;\n        x++;\n    }\n    cout<<\"Total is \"<<total<<\"\\n\";\n}", modelSolution: `1\n4\n9\n16\n25\n36\n49\n64\n81\n100\nTotal is 385` },
+            { id: "21_q3b2", type: "subjective", text: "2-", code: "#include <iostream.h>\nVoid main()\n{\n    int i;\n    for(i=1;i<=10;i++)\n    {\n        switch(i%3)\n        {\n            case 0 :cout<<\"happy\" <<endl;\n            break;\n            case 1 : cout<<\"new\"<<endl;\n            break;\n            case 2 : cout<<\"year\"<<endl;\n            break;\n        }\n    }\n}", modelSolution: `new\nyear\nhappy\nnew\nyear\nhappy\nnew\nyear\nhappy\nnew` },
+            { id: "21_q4a", type: "subjective", text: "Question 4 a) Rewrite the following conditional expressions as if/else statements:<br>1) factor = x >= 10 ? y * 22 : y * 35;<br>2) cout << ((num % 2) ==0) ? \"Even\\n\" : \"Odd\\n\");", modelSolution: `// 1)\nif(x >= 10)\n    factor = y * 22;\nelse\n    factor = y * 35;\n\n// 2)\nif((num % 2) == 0)\n    cout << "Even\\n";\nelse\n    cout << "Odd\\n";` },
+            { id: "21_q4b", type: "subjective", text: "b) Complete the following program which accepts two numbers from the user, then calculate and print the value of K, such that: K = ((10 - min)/(max - min)) * 100", code: "void main ()\n{\n    int x, y, min, max, k;\n    cout<<\"enter two numbers\";\n    ________________;\n    // find min and max values.\n    if ________________\n    {\n        ________________;\n        ________________;\n    }\n    else\n    {\n        ________________;\n        ________________;\n    }\n    // Compute K.\n    ________________;\n    cout<<\"\\n the value of K is \"<< ____;\n}", modelSolution: `cin >> x >> y;\nif(x < y) { min=x; max=y; }\nelse { min=y; max=x; }\nk = ((10 - min) / (float)(max - min)) * 100;\ncout << "\\n the value of K is " << k;` }
+        ]
+    }
+};
+
+        let activeRoomKey = "room_tf";
+        let roomScores = {};
+        let userAnswers = {};
+        let currentTheme = "dark";
+
+        function loadStateFromStorage() {
+            try {
+                const storedScores = localStorage.getItem("ultimate_portal_scores_v5");
+                const storedAnswers = localStorage.getItem("ultimate_portal_answers_v5");
+                const storedActiveRoom = localStorage.getItem("ultimate_portal_activeRoom_v4");
+                const storedTheme = localStorage.getItem("ultimate_portal_theme_v5");
+                if (storedScores) roomScores = JSON.parse(storedScores);
+                if (storedAnswers) userAnswers = JSON.parse(storedAnswers);
+                if (storedActiveRoom && examDatabase[storedActiveRoom]) activeRoomKey = storedActiveRoom;
+                if (storedTheme && (storedTheme === "light" || storedTheme === "dark")) currentTheme = storedTheme;
+            } catch (e) {}
+        }
+
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem("ultimate_portal_scores_v5", JSON.stringify(roomScores));
+                localStorage.setItem("ultimate_portal_answers_v5", JSON.stringify(userAnswers));
+                localStorage.setItem("ultimate_portal_activeRoom_v4", activeRoomKey);
+                localStorage.setItem("ultimate_portal_theme_v5", currentTheme);
+            } catch (e) {}
+        }
+
+        function applyThemeOnLoad() {
+            const bodyEl = document.getElementById("app-body");
+            const toggleBtn = document.getElementById("theme-btn");
+            if (currentTheme === "light") {
+                bodyEl.classList.add("light-theme");
+                toggleBtn.innerText = "🌙 Dark";
+            } else {
+                bodyEl.classList.remove("light-theme");
+                toggleBtn.innerText = "☀️ Light";
+            }
+        }
+
+        function toggleThemeEngineMode() {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            saveStateToStorage();
+            applyThemeOnLoad();
+        }
+
+        function initializePlatform() {
+            loadStateFromStorage();
+            applyThemeOnLoad();
+            const navbarContainer = document.getElementById("navbar-rooms-container");
+            navbarContainer.innerHTML = "";
+            Object.keys(examDatabase).forEach(key => {
+                if (!roomScores[key]) roomScores[key] = { submitted: false, score: 0, total: 0 };
+                if (!userAnswers[key]) userAnswers[key] = {};
+                const btn = document.createElement("button");
+                btn.id = `tab-${key}`;
+                btn.type = "button";
+                btn.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+                btn.onclick = () => switchRoom(key);
+                
+                let shortTitle = key;
+                if (key === "room_tf") shortTitle = "T/F Bank";
+                else if (key === "room_output") shortTitle = "Output Bank";
+                else shortTitle = key.replace("room_", "Year ");
+
+                btn.innerHTML = `<span>${shortTitle}</span><span id="badge-${key}" class="tab-badge-idle text-[9px] px-1.5 py-0.5 rounded font-bold border">IDLE</span>`;
+                navbarContainer.appendChild(btn);
+                updateNavbarBadgeStatus(key);
+            });
+            switchRoom(activeRoomKey);
+            calculateOverallMetrics();
+        }
+
+        function updateNavbarBadgeStatus(roomKey) {
+            const badge = document.getElementById(`badge-${roomKey}`);
+            const state = roomScores[roomKey];
+            if (!badge || !state) return;
+            if (state.submitted) {
+                if (state.total > 0) {
+                    const pct = Math.round((state.score / state.total) * 100);
+                    badge.innerText = `${pct}%`;
+                    badge.className = `text-[9px] px-1.5 py-0.5 rounded border font-bold ${pct >= 50 ? 'badge-pass' : 'badge-fail'}`;
+                } else {
+                    badge.innerText = "DONE";
+                    badge.className = "text-[9px] px-1.5 py-0.5 rounded border font-bold badge-done";
+                }
+            } else {
+                badge.innerText = "IDLE";
+                badge.className = "tab-badge-idle text-[9px] px-1.5 py-0.5 rounded border font-bold";
+            }
+        }
+
+        function switchRoom(roomKey) {
+            const previousTab = document.getElementById(`tab-${activeRoomKey}`);
+            if (previousTab) previousTab.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-semibold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+            activeRoomKey = roomKey;
+            saveStateToStorage();
+            const activeTab = document.getElementById(`tab-${roomKey}`);
+            if (activeTab) {
+                activeTab.className = "shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 bg-indigo-600 text-white shadow-md border border-indigo-500/30";
+                activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+            const data = examDatabase[roomKey];
+            document.getElementById("room-title").innerText = data.title;
+            document.getElementById("room-meta").innerText = data.meta;
+            renderQuestions(data.questions);
+            updateScoreBannerDisplay();
+            if (roomScores[activeRoomKey].submitted) applyVisualCorrectionFeedback();
+        }
+
+        function renderQuestions(questions) {
+            const container = document.getElementById("exam-questions-form");
+            container.innerHTML = "";
+            const isSubmitted = roomScores[activeRoomKey].submitted;
+            questions.forEach((q, idx) => {
+                const card = document.createElement("div");
+                card.className = "card-bg border rounded-2xl p-5 space-y-4 shadow-sm";
+                const header = document.createElement("div");
+                header.className = "flex justify-between items-center pb-2 border-b border-slate-800/40";
+                header.innerHTML = `<span class="text-xs font-bold text-indigo-400 bg-indigo-500/5 px-2.5 py-1 rounded-md border border-indigo-500/10 uppercase tracking-wider">Question ${idx + 1}</span><div id="status-${q.id}" class="text-xs font-bold tracking-wide"></div>`;
+                card.appendChild(header);
+                const body = document.createElement("div");
+                body.className = "text-main leading-relaxed text-sm font-semibold";
+                body.innerHTML = q.text;
+                card.appendChild(body);
+                if (q.code) {
+                    const codeBox = document.createElement("div");
+                    codeBox.className = "code-box-bg relative rounded-xl border p-4 shadow-inner overflow-x-auto my-3 block whitespace-pre-wrap";
+                    const codeLabel = document.createElement("div");
+                    codeLabel.className = "absolute right-3 top-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest pointer-events-none select-none code-font";
+                    codeLabel.textContent = "C++ Code";
+                    const codePre = document.createElement("pre");
+                    codePre.className = "code-font text-xs md:text-sm font-medium leading-relaxed block whitespace-pre-wrap";
+                    codePre.textContent = q.code;
+                    codeBox.appendChild(codeLabel);
+                    codeBox.appendChild(codePre);
+                    card.appendChild(codeBox);
+                }
+                const savedAnswer = userAnswers[activeRoomKey][q.id];
+                if (q.type === "mcq") {
+                    const optsDiv = document.createElement("div");
+                    optsDiv.className = "grid grid-cols-1 md:grid-cols-2 gap-3 pt-1";
+                    q.options.forEach((opt, oIdx) => {
+                        const isChecked = savedAnswer !== undefined && parseInt(savedAnswer) === oIdx;
+                        const label = document.createElement("label");
+                        label.id = `wrapper-${q.id}-${oIdx}`;
+                        label.className = "option-wrapper flex items-center gap-3 border p-4 rounded-xl cursor-pointer transition-all group";
+                        const input = document.createElement("input");
+                        input.type = "radio";
+                        input.name = `input-${q.id}`;
+                        input.value = `${oIdx}`;
+                        input.checked = isChecked;
+                        input.disabled = isSubmitted;
+                        input.onchange = () => storeAnswer(q.id, input.value);
+                        input.className = "w-4 h-4 text-indigo-600 accent-indigo-500";
+                        const span = document.createElement("span");
+                        span.className = "text-xs md:text-sm font-medium";
+                        span.appendChild(document.createTextNode(opt));
+                        label.appendChild(input);
+                        label.appendChild(span);
+                        optsDiv.appendChild(label);
+                    });
+                    card.appendChild(optsDiv);
+                    card.appendChild(buildExplainBtn(q));
+                } else if (q.type === "tf") {
+                    const optsDiv = document.createElement("div");
+                    optsDiv.className = "flex gap-3 pt-1";
+                    const isTrueChecked = savedAnswer === "true";
+                    const isFalseChecked = savedAnswer === "false";
+                    const trueLabel = document.createElement("label");
+                    trueLabel.id = `wrapper-${q.id}-true`;
+                    trueLabel.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl cursor-pointer";
+                    const trueInput = document.createElement("input");
+                    trueInput.type = "radio";
+                    trueInput.name = `input-${q.id}`;
+                    trueInput.value = "true";
+                    trueInput.checked = isTrueChecked;
+                    trueInput.disabled = isSubmitted;
+                    trueInput.onchange = () => storeAnswer(q.id, trueInput.value);
+                    trueInput.className = "w-4 h-4 accent-indigo-500";
+                    const trueSpan = document.createElement("span");
+                    trueSpan.className = "text-xs md:text-sm font-bold";
+                    trueSpan.textContent = "True";
+                    trueLabel.appendChild(trueInput);
+                    trueLabel.appendChild(trueSpan);
+                    const falseLabel = document.createElement("label");
+                    falseLabel.id = `wrapper-${q.id}-false`;
+                    falseLabel.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl cursor-pointer";
+                    const falseInput = document.createElement("input");
+                    falseInput.type = "radio";
+                    falseInput.name = `input-${q.id}`;
+                    falseInput.value = "false";
+                    falseInput.checked = isFalseChecked;
+                    falseInput.disabled = isSubmitted;
+                    falseInput.onchange = () => storeAnswer(q.id, falseInput.value);
+                    falseInput.className = "w-4 h-4 accent-indigo-500";
+                    const falseSpan = document.createElement("span");
+                    falseSpan.className = "text-xs md:text-sm font-bold";
+                    falseSpan.textContent = "False";
+                    falseLabel.appendChild(falseInput);
+                    falseLabel.appendChild(falseSpan);
+                    optsDiv.appendChild(trueLabel);
+                    optsDiv.appendChild(falseLabel);
+                    card.appendChild(optsDiv);
+                    card.appendChild(buildExplainBtn(q));
+                } else if (q.type === "subjective") {
+                    const textDiv = document.createElement("div");
+                    textDiv.className = "space-y-3 pt-1";
+                    const textarea = document.createElement("textarea");
+                    textarea.id = `input-${q.id}`;
+                    textarea.rows = 5;
+                    textarea.disabled = isSubmitted;
+                    textarea.oninput = () => storeAnswer(q.id, textarea.value);
+                    textarea.className = "subjective-textarea w-full focus:border-indigo-500/50 rounded-xl p-4 code-font text-xs md:text-sm focus:outline-none resize-y";
+                    textarea.placeholder = "// Write your answer here...";
+                    textarea.value = savedAnswer || "";
+                    textDiv.appendChild(textarea);
+                    const solutionBtn = document.createElement("button");
+                    solutionBtn.type = "button";
+                    solutionBtn.onclick = () => toggleSolution(q.id);
+                    solutionBtn.className = "text-[11px] text-indigo-500 hover:text-indigo-400 font-bold flex items-center gap-1.5 cursor-pointer select-none";
+                    solutionBtn.innerHTML = `<span>💡 View Reference Model Solution</span>`;
+                    const solutionWrapper = document.createElement("div");
+                    solutionWrapper.id = `sol-${q.id}`;
+                    solutionWrapper.className = "hidden solution-box border rounded-xl p-4 space-y-2";
+                    const solutionTitle = document.createElement("div");
+                    solutionTitle.className = "text-[10px] uppercase tracking-wider font-bold text-indigo-500";
+                    solutionTitle.textContent = "Solution Template:";
+                    const solutionPre = document.createElement("pre");
+                    solutionPre.className = "code-font text-main text-xs block whitespace-pre-wrap leading-relaxed";
+                    solutionPre.textContent = q.modelSolution;
+                    solutionWrapper.appendChild(solutionTitle);
+                    solutionWrapper.appendChild(solutionPre);
+                    textDiv.appendChild(solutionBtn);
+                    textDiv.appendChild(solutionWrapper);
+                    card.appendChild(textDiv);
+                }
+                container.appendChild(card);
+            });
+        }
+
+        function storeAnswer(questionId, value) {
+            userAnswers[activeRoomKey][questionId] = value;
+            saveStateToStorage();
+        }
+
+        function buildExplainBtn(q) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "pt-1 space-y-2";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "text-[11px] text-violet-400 hover:text-violet-300 font-bold flex items-center gap-1.5 cursor-pointer select-none transition-colors";
+            btn.innerHTML = `<span>🧠 شرح الإجابة بـ AI</span>`;
+            const box = document.createElement("div");
+            box.id = `explain-${q.id}`;
+            box.className = "hidden explain-box border rounded-xl p-4 space-y-2";
+            const boxTitle = document.createElement("div");
+            boxTitle.className = "text-[10px] uppercase tracking-wider font-bold text-violet-400";
+            boxTitle.textContent = "شرح الإجابة:";
+            const boxContent = document.createElement("div");
+            boxContent.id = `explain-content-${q.id}`;
+            boxContent.className = "text-main text-sm leading-relaxed whitespace-pre-wrap";
+            box.appendChild(boxTitle);
+            box.appendChild(boxContent);
+            btn.onclick = () => explainAnswer(q, box, boxContent, btn);
+            wrapper.appendChild(btn);
+            wrapper.appendChild(box);
+            return wrapper;
+        }
+
+        function explainAnswer(q, box, contentEl, btn) {
+            if (!box.classList.contains("hidden")) {
+                box.classList.add("hidden");
+                btn.innerHTML = `<span>🧠 شرح الإجابة</span>`;
+                return;
+            }
+            box.classList.remove("hidden");
+
+            let explanation = "";
+            if (q.type === "mcq") {
+                explanation = `✅ الإجابة الصحيحة:\n${q.options[q.answer]}`;
+                const wrongs = q.options
+                    .map((opt, i) => i !== q.answer ? `✗ ${opt}` : null)
+                    .filter(Boolean);
+                if (wrongs.length) explanation += "\n\nالخيارات الخاطئة:\n" + wrongs.join("\n");
+            } else if (q.type === "tf") {
+                explanation = `✅ الإجابة الصحيحة: ${q.answer ? "True ✓" : "False ✗"}`;
+            }
+
+            contentEl.textContent = explanation;
+            btn.innerHTML = `<span>🧠 إخفاء الشرح</span>`;
+        }
+
+        function toggleSolution(id) {
+            const el = document.getElementById(`sol-${id}`);
+            if (el) el.classList.toggle("hidden");
+        }
+
+        function submitCurrentRoom() {
+            const questions = examDatabase[activeRoomKey].questions;
+            let correctCount = 0, autoGradedTotal = 0;
+            questions.forEach(q => {
+                if (q.type === "mcq") {
+                    autoGradedTotal++;
+                    const selected = userAnswers[activeRoomKey][q.id];
+                    if (selected !== undefined && parseInt(selected) === q.answer) correctCount++;
+                } else if (q.type === "tf") {
+                    autoGradedTotal++;
+                    const selected = userAnswers[activeRoomKey][q.id];
+                    if (selected !== undefined && (selected === "true") === q.answer) correctCount++;
+                }
+            });
+            roomScores[activeRoomKey] = { submitted: true, score: correctCount, total: autoGradedTotal };
+            saveStateToStorage();
+            renderQuestions(questions);
+            applyVisualCorrectionFeedback();
+            updateNavbarBadgeStatus(activeRoomKey);
+            updateScoreBannerDisplay();
+            calculateOverallMetrics();
+        }
+
+        function applyVisualCorrectionFeedback() {
+            const questions = examDatabase[activeRoomKey].questions;
+            questions.forEach(q => {
+                const statusEl = document.getElementById(`status-${q.id}`);
+                const savedAns = userAnswers[activeRoomKey][q.id];
+                if (q.type === "mcq") {
+                    q.options.forEach((_, oIdx) => {
+                        const optWrapper = document.getElementById(`wrapper-${q.id}-${oIdx}`);
+                        if (optWrapper) optWrapper.className = "option-wrapper flex items-center gap-3 border p-4 rounded-xl opacity-60";
+                    });
+                    const correctWrapper = document.getElementById(`wrapper-${q.id}-${q.answer}`);
+                    if (correctWrapper) {
+                        correctWrapper.className = "flex items-center gap-3 bg-emerald-500/20 border border-emerald-500 text-emerald-600 font-bold p-4 rounded-xl opacity-100 shadow-sm";
+                        // Add "الإجابة الصحيحة" badge if not already there
+                        if (!correctWrapper.querySelector('.correct-badge')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'correct-badge ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 whitespace-nowrap';
+                            badge.textContent = '✅ الإجابة الصحيحة';
+                            correctWrapper.appendChild(badge);
+                        }
+                    }
+                    if (savedAns !== undefined) {
+                        const userIdx = parseInt(savedAns);
+                        if (userIdx === q.answer) {
+                            if (statusEl) statusEl.innerHTML = "<span class='text-emerald-500 font-bold'>✓ Correct</span>";
+                        } else {
+                            const wrongWrapper = document.getElementById(`wrapper-${q.id}-${userIdx}`);
+                            if (wrongWrapper) wrongWrapper.className = "flex items-center gap-3 bg-rose-500/20 border border-rose-500 text-rose-600 font-bold p-4 rounded-xl opacity-100";
+                            if (statusEl) statusEl.innerHTML = "<span class='text-rose-500 font-bold'>✗ Incorrect</span>";
+                        }
+                    } else {
+                        if (statusEl) statusEl.innerHTML = "<span class='text-amber-500 font-semibold'>Unanswered</span>";
+                    }
+                } else if (q.type === "tf") {
+                    const trueWrapper = document.getElementById(`wrapper-${q.id}-true`);
+                    const falseWrapper = document.getElementById(`wrapper-${q.id}-false`);
+                    if (trueWrapper) trueWrapper.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl opacity-60";
+                    if (falseWrapper) falseWrapper.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl opacity-60";
+                    const correctStr = q.answer ? "true" : "false";
+                    const correctWrapper = document.getElementById(`wrapper-${q.id}-${correctStr}`);
+                    if (correctWrapper) {
+                        correctWrapper.className = "flex items-center gap-3 bg-emerald-500/20 border border-emerald-500 text-emerald-600 font-bold px-5 py-3 rounded-xl opacity-100";
+                        if (!correctWrapper.querySelector('.correct-badge')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'correct-badge ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 whitespace-nowrap';
+                            badge.textContent = '✅ الإجابة الصحيحة';
+                            correctWrapper.appendChild(badge);
+                        }
+                    }
+                    if (savedAns !== undefined) {
+                        if (savedAns === correctStr) {
+                            if (statusEl) statusEl.innerHTML = "<span class='text-emerald-500 font-bold'>✓ Correct</span>";
+                        } else {
+                            const wrongWrapper = document.getElementById(`wrapper-${q.id}-${savedAns}`);
+                            if (wrongWrapper) wrongWrapper.className = "flex items-center gap-3 bg-rose-500/20 border border-rose-500 text-rose-600 font-bold px-5 py-3 rounded-xl opacity-100";
+                            if (statusEl) statusEl.innerHTML = "<span class='text-rose-500 font-bold'>✗ Incorrect</span>";
+                        }
+                    } else {
+                        if (statusEl) statusEl.innerHTML = "<span class='text-amber-500 font-semibold'>Unanswered</span>";
+                    }
+                }
+            });
+        }
+
+        function resetCurrentRoom() {
+            roomScores[activeRoomKey] = { submitted: false, score: 0, total: 0 };
+            userAnswers[activeRoomKey] = {};
+            saveStateToStorage();
+            updateNavbarBadgeStatus(activeRoomKey);
+            renderQuestions(examDatabase[activeRoomKey].questions);
+            updateScoreBannerDisplay();
+            calculateOverallMetrics();
+        }
+
+        function updateScoreBannerDisplay() {
+            const banner = document.getElementById("room-score-banner");
+            const state = roomScores[activeRoomKey];
+            if (state && state.submitted && state.total > 0) {
+                banner.classList.remove("hidden");
+                document.getElementById("room-score-breakdown").innerText = `You scored ${state.score} out of ${state.total} binary/multiple-choice items accurately.`;
+                const pct = Math.round((state.score / state.total) * 100);
+                document.getElementById("room-percentage-badge").innerText = `${pct}%`;
+            } else {
+                banner.classList.add("hidden");
+            }
+        }
+
+        function calculateOverallMetrics() {
+            let totalScore = 0, totalGraded = 0;
+            Object.keys(examDatabase).forEach(key => {
+                if (roomScores[key] && roomScores[key].submitted) {
+                    totalScore += roomScores[key].score;
+                    totalGraded += roomScores[key].total;
+                }
+            });
+            const overallPct = totalGraded > 0 ? Math.round((totalScore / totalGraded) * 100) : 0;
+            document.getElementById("overall-score-txt").innerText = `${overallPct}% Passed`;
+        }
+
+        window.onload = initializePlatform;
+    </script>
+    <footer class="nav-bg border-t border-slate-800/40 mt-16 py-12 px-6 transition-all duration-300 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6 text-center relative z-10">
+            <div class="flex items-center gap-2 bg-indigo-500/10 dark:bg-indigo-500/15 border border-indigo-500/30 px-4 py-1.5 rounded-xl shadow-lg shadow-indigo-500/5 animate-bounce duration-1000">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-[10px] md:text-xs font-bold text-indigo-400 uppercase tracking-[0.2em] code-font">System Engineers</span>
+            </div>
+            <div class="space-y-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-slate-400 font-extrabold opacity-80">⚡ Made With Passion By ⚡</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 pt-2">
+                    <h2 class="footer-name-1 text-2xl md:text-4xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none">ENG:ABO ANWER</h2>
+                    <h2 class="footer-name-1 text-xl md:text-2xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none"> < AHMED ElKOMY /> </h2>
+
+                    <span class="hidden md:block text-slate-500 font-light text-2xl">|</span>
+                    <span class="block md:hidden w-12 h-[2px] bg-slate-300 dark:bg-slate-800 rounded"></span>
+                    <h2 class="footer-name-2 text-2xl md:text-4xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none">ENG: HAMZA KAFAFI</h2>
+                </div>
+            </div>
+            <div class="w-40 h-[2px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-70 my-4"></div>
+            <p class="text-[10px] uppercase tracking-[0.4em] text-muted font-bold code-font opacity-60">© 2026 Premium Portal • First Level IT</p>
+        </div>
+    </footer>
+</body>
+</html>

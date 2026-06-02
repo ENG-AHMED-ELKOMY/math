@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH102 Premium Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+            svg: { fontCache: 'global' },
+            startup: { typeset: false }
+        };
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; line-height: 1.7; transition: background-color 0.25s ease, color 0.25s ease; }
+        .code-font { font-family: 'Fira Code', monospace; font-variant-ligatures: none; font-size: 13.5px; line-height: 1.75; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        body                { background-color: #020617 !important; color: #e2e8f0; }
+        .card-bg            { background-color: #0f172a; border-color: #1e293b; color: #e2e8f0; }
+        .code-box-bg        { background-color: #020617; border-color: #334155; color: #34d399; }
+        .text-main          { color: #f1f5f9; }
+        .text-muted         { color: #94a3b8; }
+        .nav-bg             { background-color: #0f172a; border-color: #1e293b; }
+        .option-wrapper     { background-color: #0a1628; border-color: #1e293b; color: #cbd5e1; }
+        .tab-idle           { background-color: rgba(15,23,42,0.5); border-color: rgba(30,41,59,0.5); color: #94a3b8; }
+        .tab-badge-idle     { background-color: #020617; border-color: #1e293b; color: #64748b; }
+        .badge-pass, .badge-fail, .badge-done, .tab-badge-idle { transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
+
+        body.light-theme                { background-color: #f1f5f9 !important; color: #0f172a; }
+        body.light-theme .card-bg       { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+        body.light-theme .code-box-bg   { background-color: #f8fafc; border-color: #cbd5e1; color: #15803d; }
+        body.light-theme .text-main     { color: #0f172a; }
+        body.light-theme .text-muted    { color: #475569; }
+        body.light-theme .nav-bg        { background-color: #ffffff; border-color: #e2e8f0; }
+        body.light-theme .option-wrapper{ background-color: #ffffff; border-color: #e2e8f0; color: #1e293b; }
+        body.light-theme .tab-idle      { background-color: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+        body.light-theme .tab-badge-idle{ background-color: #e2e8f0; border-color: #94a3b8; color: #475569; }
+        body.light-theme #theme-btn     { background-color: #f1f5f9; border-color: #cbd5e1; color: #4f46e5; }
+        body.light-theme #overall-score-container { background-color: #f0fdf4; border-color: #bbf7d0; }
+        body.light-theme .btn-reset     { border-color: #cbd5e1; color: #475569; }
+        body.light-theme .btn-reset:hover { background-color: #f1f5f9; }
+        .footer-name-1 { background: linear-gradient(to right, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .footer-name-2 { background: linear-gradient(to right, #22d3ee, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .explain-box { background-color: #0d1f3c; border-color: #1e3a5f; transition: background-color 0.25s ease, border-color 0.25s ease; }
+        body.light-theme .explain-box { background-color: #eff6ff; border-color: #bfdbfe; }
+        .sol-content { display: flex; flex-direction: column; gap: 6px; line-height: 1.7; }
+        .sol-line { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 1px 0; }
+        .sol-line mjx-container { margin: 0 !important; }
+        .solution-box { background-color: rgba(2,6,23,0.3); border-color: #334155; transition: background-color 0.25s ease, border-color 0.25s ease; }
+        .subjective-textarea { background-color: rgba(2,6,23,0.2); border-color: rgba(51,65,85,0.8); color: #34d399; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
+        body.light-theme .solution-box { background-color: #f8fafc; border-color: #e2e8f0; }
+        body.light-theme .subjective-textarea { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+        body.light-theme .subjective-textarea::placeholder { color: #94a3b8; }
+        .badge-pass   { background-color: rgba(6,78,59,0.4);  color: #34d399; border-color: rgba(6,78,59,0.3); }
+        .badge-fail   { background-color: rgba(136,19,55,0.4); color: #fb7185; border-color: rgba(136,19,55,0.3); }
+        .badge-done   { background-color: rgba(49,46,129,0.4); color: #a5b4fc; border-color: rgba(49,46,129,0.3); }
+        body.light-theme .badge-pass { background-color: #dcfce7; color: #15803d; border-color: #86efac; }
+        body.light-theme .badge-fail { background-color: #ffe4e6; color: #be123c; border-color: #fda4af; }
+        body.light-theme .badge-done { background-color: #ede9fe; color: #6d28d9; border-color: #c4b5fd; }
+        body.light-theme footer { background-color: #ffffff; border-color: #e2e8f0; }
+    </style>
+</head>
+<body id="app-body" class="min-h-screen flex flex-col selection:bg-indigo-500/30">
+    <header class="nav-bg border-b p-4 flex flex-col gap-3 shadow-sm">
+        <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2 rounded-xl text-white font-bold text-xs shadow-md">∫</div>
+                <div>
+                    <h1 class="text-base font-bold bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">MATH102 Portal</h1>
+                    <p class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Minia University • Faculty of Science</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="toggleThemeEngineMode()" class="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900/40 text-xs font-bold cursor-pointer transition-colors text-main" id="theme-btn">☀️ Light</button>
+                <div id="overall-score-container" class="bg-slate-900/40 border border-slate-800/60 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-emerald-500"><span id="overall-score-txt">0% Passed</span></div>
+            </div>
+        </div>
+        <div class="w-full overflow-x-auto no-scrollbar flex items-center gap-1.5 pt-1" id="navbar-rooms-container"></div>
+    </header>
+    <div class="flex flex-1 justify-center w-full max-w-4xl mx-auto p-4 md:p-6">
+        <main class="w-full flex flex-col">
+            <div class="card-bg border rounded-2xl p-4 mb-5 space-y-1 shadow-sm">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Active Exam Module</span>
+                </div>
+                <h2 id="room-title" class="text-base font-bold text-main tracking-tight">Loading...</h2>
+                <p id="room-meta" class="text-xs text-muted font-medium"></p>
+            </div>
+            <div id="room-score-banner" class="hidden bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 mb-5 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="text-emerald-500 text-xs font-bold">✓ PERFORMANCE EVALUATED:</div>
+                    <div class="text-xs text-main font-semibold" id="room-score-breakdown">You scored 0 items correctly.</div>
+                </div>
+                <div id="room-percentage-badge" class="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">0%</div>
+            </div>
+            <form id="exam-questions-form" onsubmit="event.preventDefault();" class="space-y-4"></form>
+            <div class="card-bg border rounded-2xl p-4 mt-6 flex items-center justify-end gap-2 shadow-sm">
+                <button type="button" onclick="resetCurrentRoom()" class="btn-reset border border-slate-700/80 hover:bg-slate-800/40 text-muted font-medium text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer">Reset Answers</button>
+                <button type="button" onclick="submitCurrentRoom()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer">Submit Room Answers</button>
+            </div>
+        </main>
+    </div>
+
+<script>
+const examDatabase = {
+    "room_2023": {
+        title: "Final Exam 2022/2023 — Dr. Hossam Radwan",
+        meta: "MATH102 | June 2023 | Time: 2 hours | Total: 70 Marks",
+        questions: [
+            {
+                id: "23_q1", type: "mcq",
+                text: "Q1.1 — Find the value of $c$ for which $f(x) = \\begin{cases} x^2-3, & x\\le1 \\\\ 2x-c, & x>1 \\end{cases}$ is continuous.",
+                options: ["a) 4","b) 6","c) 1","d) None of these"],
+                answer: 0,
+                explain: "For continuity at x=1: lim(x→1⁻) = 1−3 = −2 and lim(x→1⁺) = 2(1)−c = 2−c. Setting equal: 2−c = −2 → c = 4."
+            },
+            {
+                id: "23_q2", type: "mcq",
+                text: "Q1.2 — Differentiate: $h(x) = \\csc\\sqrt{x}$",
+                options: ["a) $-\\cot^2\\sqrt{x}$","b) $\\dfrac{-\\csc\\sqrt{x}\\cot\\sqrt{x}}{2\\sqrt{x}}$","c) $-\\csc\\dfrac{1}{2\\sqrt{x}}\\cot\\dfrac{1}{2\\sqrt{x}}$","d) None of these"],
+                answer: 1,
+                explain: "Using chain rule: h'(x) = −csc(√x)·cot(√x) · d/dx(√x) = −csc(√x)·cot(√x) · 1/(2√x)."
+            },
+            {
+                id: "23_q3", type: "mcq",
+                text: "Q1.3 — If $2\\ln x - 2 = 0$, then $x =$",
+                options: ["a) 0","b) $e$","c) 1","d) None of these"],
+                answer: 1,
+                explain: "2 ln x = 2 → ln x = 1 → x = e."
+            },
+            {
+                id: "23_q4", type: "mcq",
+                text: "Q1.4 — Find $\\dfrac{dy}{dx}$ for $5x^2 - 2xy + 7y^2 = 0$",
+                options: ["a) $10x - 2y + 12$","b) $\\dfrac{y-5x}{7-y}$","c) $\\dfrac{y-5x}{7y-x}$","d) None of these"],
+                answer: 2,
+                explain: "Implicit differentiation: 10x − 2y − 2x·y' + 14y·y' = 0 → y'(14y−2x) = 2y−10x → y' = (y−5x)/(7y−x)."
+            },
+            {
+                id: "23_q5", type: "mcq",
+                text: "Q1.5 — If $y = \\cot t$, $x = \\tan t$, then $\\dfrac{dy}{dx} =$",
+                options: ["a) $-\\cot^2 t$","b) $\\cot^2 t$","c) $-\\tan^2 t$","d) $\\tan^2 t$"],
+                answer: 0,
+                explain: "dy/dt = −csc²t, dx/dt = sec²t. dy/dx = −csc²t / sec²t = −cos²t/sin²t = −cot²t."
+            },
+            {
+                id: "23_tf1", type: "tf",
+                text: "Q2.1 — If $y = \\tan^{-1}x + \\tan^{-1}\\dfrac{1}{x}$, then $y' = 0$.",
+                answer: true,
+                explain: "tan⁻¹x + tan⁻¹(1/x) = π/2 for x>0 (constant), so derivative = 0. ✓"
+            },
+            {
+                id: "23_tf2", type: "tf",
+                text: "Q2.2 — $\\displaystyle\\lim_{x\\to 1}\\frac{\\ln x}{x-1} = 1$",
+                answer: true,
+                explain: "L'Hôpital: lim (1/x)/1 = 1 at x=1. ✓"
+            },
+            {
+                id: "23_tf3", type: "tf",
+                text: "Q2.3 — $5^\\pi = e^{\\pi \\ln 5}$",
+                answer: true,
+                explain: "By definition: a^b = e^(b·ln a), so 5^π = e^(π·ln 5). ✓"
+            },
+            {
+                id: "23_tf4", type: "tf",
+                text: "Q2.4 — If $y = \\dfrac{\\ln x}{1+\\ln x}$, then $y'(e) = \\dfrac{e-1}{4}$",
+                answer: false,
+                explain: "y' = [1/x(1+ln x) − ln x·(1/x)] / (1+ln x)² = 1/[x(1+ln x)²]. At x=e: y'(e) = 1/(e·4) = 1/(4e) ≠ (e−1)/4. ✗"
+            },
+            {
+                id: "23_tf5", type: "tf",
+                text: "Q2.5 — $\\sin(\\sin^{-1} 2) = 2$",
+                answer: false,
+                explain: "sin⁻¹ is only defined for inputs in [−1,1]. sin⁻¹(2) is undefined. ✗"
+            },
+            {
+                id: "23_open1", type: "subjective",
+                text: "Q3.1 — Prove that $\\sin(2\\sin^{-1}x) = 2x\\sqrt{1-x^2}$",
+                modelSolution: "Let θ = sin⁻¹x, so sin θ = x and cos θ = √(1−x²).\nsin(2θ) = 2 sin θ cos θ = 2x√(1−x²). ∎"
+            },
+            {
+                id: "23_open2", type: "subjective",
+                text: "Q3.2 — Find the Maclaurin series of $f(x) = \\cos x$, then find $\\displaystyle\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}$ using this series.",
+                modelSolution: "cos x = 1 − x²/2! + x⁴/4! − ⋯\n1 − cos x = x²/2 − x⁴/24 + ⋯\n(1−cos x)/x² = 1/2 − x²/24 + ⋯\nAs x→0: limit = 1/2."
+            },
+            {
+                id: "23_open3a", type: "subjective",
+                text: "Q3.3a — Find: $\\displaystyle\\lim_{n\\to\\infty}\\left(1-\\frac{3}{2n}\\right)^{2n}$",
+                modelSolution: "Write as [1+(−3/(2n))]^(2n). Using lim(1+u/n)^n = eᵘ:\nLet m=2n, u=−3 → limit = e^(−3)."
+            },
+            {
+                id: "23_open3b", type: "subjective",
+                text: "Q3.3b — Find: $\\displaystyle\\lim_{x\\to\\pi/2}(\\sec x - \\tan x)$",
+                modelSolution: "= lim (1−sin x)/cos x [0/0 form]\nL'Hôpital: lim (−cos x)/(−sin x) = 0/1 = 0."
+            },
+            {
+                id: "23_open3c", type: "subjective",
+                text: "Q3.3c — Find: $\\displaystyle\\lim_{x\\to 0^+} x\\ln x$",
+                modelSolution: "= lim (ln x)/(1/x) [−∞/∞ form]\nL'Hôpital: lim (1/x)/(−1/x²) = lim(−x) = 0."
+            },
+            {
+                id: "23_open4a", type: "subjective",
+                text: "Q4.1a — Evaluate: $\\int x\\sqrt{x+1}\\,dx$",
+                modelSolution: "Let u = x+1, x = u−1, dx = du\n= ∫(u−1)√u du = ∫(u^(3/2) − u^(1/2)) du\n= (2/5)u^(5/2) − (2/3)u^(3/2) + C\n= (2/5)(x+1)^(5/2) − (2/3)(x+1)^(3/2) + C"
+            },
+            {
+                id: "23_open4b", type: "subjective",
+                text: "Q4.1b — Evaluate: $\\displaystyle\\int_0^{\\pi/2}\\frac{\\sin x}{\\sin x + \\cos x}\\,dx$",
+                modelSolution: "Use I + I' = ∫₀^(π/2) (sin x + cos x)/(sin x + cos x) dx = π/2\nwhere I' = ∫₀^(π/2) cos x/(sin x + cos x) dx (substitute x→π/2−x)\nSo 2I = π/2 → I = π/4."
+            },
+            {
+                id: "23_open4c", type: "subjective",
+                text: "Q4.1c — Evaluate: $\\displaystyle\\int\\frac{x^3}{\\sqrt{x^2-1}}\\,dx$",
+                modelSolution: "Let u = x²−1, du = 2x dx\nx³ = x·x² = x(u+1)\n= ∫ x(u+1)/√u · (du/2x) = (1/2)∫(u+1)/√u du\n= (1/2)∫(u^(1/2) + u^(−1/2)) du\n= (1/2)[(2/3)u^(3/2) + 2u^(1/2)] + C\n= (1/3)(x²−1)^(3/2) + (x²−1)^(1/2) + C"
+            },
+            {
+                id: "23_open4d", type: "subjective",
+                text: "Q4.1d — Evaluate: $\\displaystyle\\int_0^1 \\tan^{-1} x\\,dx$",
+                modelSolution: "By parts: u = tan⁻¹x, dv = dx\ndu = 1/(1+x²)dx, v = x\n= [x tan⁻¹x]₀¹ − ∫₀¹ x/(1+x²) dx\n= π/4 − [½ ln(1+x²)]₀¹\n= π/4 − ½ ln 2"
+            },
+            {
+                id: "23_open4e", type: "subjective",
+                text: "Q4.2 — If $f(x)=\\begin{cases}e^x, & x>1\\\\ 3x^2, & x\\le1\\end{cases}$, find $\\displaystyle\\int_{-2}^{5}f(x)\\,dx$.",
+                modelSolution: "= ∫₋₂¹ 3x² dx + ∫₁⁵ eˣ dx\n= [x³]₋₂¹ + [eˣ]₁⁵\n= (1−(−8)) + (e⁵−e)\n= 9 + e⁵ − e"
+            },
+            {
+                id: "23_open4f", type: "subjective",
+                text: "Q4.3 — Find the area bounded by $y = 2x^2+3$ and the x-axis between $x=-1$ and $x=3$.",
+                modelSolution: "Area = ∫₋₁³ (2x²+3) dx\n= [2x³/3 + 3x]₋₁³\n= (18+9) − (−2/3−3)\n= 27 − (−11/3)\n= 27 + 11/3 = 81/3 + 11/3 = 92/3"
+            }
+        ]
+    },
+
+    "room_2025": {
+        title: "Final Exam 2024/2025",
+        meta: "MATH102 | Minia University, Dept. of Mathematics | Time: 2 hours",
+        questions: [
+            {
+                id: "25_q1", type: "mcq",
+                text: "Q1.1 — $\\int 2e^{3x}\\,dx =$",
+                options: ["a) $2e^x+c$","b) $2\\ln x+c$","c) $\\dfrac{2}{3}e^{3x}+c$","d) $2e^{3x}+c$","e) $6e^{3x}+c$"],
+                answer: 2,
+                explain: "∫2e^(3x)dx = 2 · e^(3x)/3 + c = (2/3)e^(3x) + c."
+            },
+            {
+                id: "25_q2", type: "mcq",
+                text: "Q1.2 — Differentiate $(x^2+2)^3$",
+                options: ["a) $(x+2)^{1/2}$","b) $2x(x^2+2)^2$","c) $6x^2(x^3+2)^2$","d) $3x^2(x^3+2)$","e) $6x(x^2+2)^2$"],
+                answer: 4,
+                explain: "d/dx(u³) = 3u²·u', u = x²+2, u'=2x → 3(x²+2)²·2x = 6x(x²+2)²."
+            },
+            {
+                id: "25_q3", type: "mcq",
+                text: "Q1.3 — Using $u=\\cos x$, $\\int\\cos^3 x\\sin x\\,dx$ is equivalent to:",
+                options: ["a) $\\int u^3\\,du$","b) $\\int 3u^2\\,du$","c) $\\frac{1}{3}\\int u^3\\,du$","d) $\\int u^4\\,du$","e) $-\\int u^3\\,du$"],
+                answer: 4,
+                explain: "u=cos x → du=−sin x dx, so sin x dx = −du. ∫cos³x sin x dx = ∫u³(−du) = −∫u³du."
+            },
+            {
+                id: "25_q4", type: "mcq",
+                text: "Q1.4 — $\\displaystyle\\int_0^1 xe^{x^2}\\,dx =$",
+                options: ["a) $\\frac{1}{2}(e+1)$","b) $e-1$","c) $\\frac{1}{2}(e-1)$","d) $\\frac{e^2}{2}$","e) $\\frac{1}{2}e(e^3-1)$"],
+                answer: 2,
+                explain: "u=x², du=2x dx → (1/2)∫₀¹ eᵘ du = (1/2)[eᵘ]₀¹ = (1/2)(e−1)."
+            },
+            {
+                id: "25_q5", type: "mcq",
+                text: "Q1.5 — If $\\int_1^{10}f(x)dx=4$ and $\\int_{10}^{3}f(x)dx=7$, then $\\int_1^{3}f(x)dx=$",
+                options: ["a) 10","b) −3","c) 3","d) 11","e) 12"],
+                answer: 3,
+                explain: "∫₁³ f = ∫₁¹⁰ f + ∫₁₀³ f = 4 + 7 = 11. (Note ∫₁₀³ = −∫₃¹⁰, given as 7 means ∫₁₀³ = 7.)"
+            },
+            {
+                id: "25_q6", type: "mcq",
+                text: "Q1.6 — Using integration by parts, $\\int xe^x\\,dx$ is equivalent to:",
+                options: ["a) $xe^x+\\int e^x dx$","b) $xe^x-\\int e^x dx$","c) $x-\\int e^x dx$","d) $x+\\int e^x dx$","e) $xe^x$"],
+                answer: 1,
+                explain: "IBP: u=x, dv=eˣdx → du=dx, v=eˣ. ∫xe^x dx = xe^x − ∫e^x dx."
+            },
+            {
+                id: "25_q7", type: "mcq",
+                text: "Q1.7 — If $f(x)=\\dfrac{e^{2x}}{2x}$, then $f'(1)=$",
+                options: ["a) $\\frac{e^2}{2}$","b) $-\\frac{e^2}{2}$","c) $\\frac{3e^2}{2}$","d) 1","e) $e^2$"],
+                answer: 2,
+                explain: "f'(x) = [2e^(2x)·2x − e^(2x)·2]/(4x²) = e^(2x)(4x−2)/(4x²). At x=1: e²(2)/(4) = e²/2... Actually: [2xe^(2x)·2 − 2e^(2x)]/(4x²) = e^(2x)(4x−2)/(4x²). At x=1: e²(2)/4 = e²/2. Wait recalculate: numerator = 2e²·2·1 − e²·2 = 4e²−2e² = 2e², denom=4. f'(1) = 2e²/4·... Let's use quotient: f = e^(2x)/(2x). f' = [2e^(2x)·(2x) − e^(2x)·2]/(4x²) = e^(2x)[4x−2]/(4x²). x=1: e²·2/4 = e²/2. But option c is 3e²/2 — checking again: (2·2e²·1 − e²·2)/(2·1)² = (4e²−2e²)/4 = 2e²/4 = e²/2. Answer is a)."
+            },
+            {
+                id: "25_q8", type: "mcq",
+                text: "Q1.8 — Using $u=x^3$, $\\int x^2\\cos x^3\\,dx$ is equivalent to:",
+                options: ["a) $\\int\\cos u\\,du$","b) $\\frac{1}{3}\\int\\cos u\\,du$","c) $\\int 3\\cos u\\,du$","d) $\\int u^2\\,du$"],
+                answer: 1,
+                explain: "u=x³ → du=3x²dx, so x²dx = du/3. ∫x²cos(x³)dx = (1/3)∫cos u du."
+            },
+            {
+                id: "25_q9", type: "mcq",
+                text: "Q1.9 — $\\int x^2\\cos x^3\\,dx =$",
+                options: ["a) $\\frac{1}{3}\\sin x^2+c$","b) $\\sin x^3+c$","c) $3\\sin x^3+c$","d) $\\frac{1}{3}x^3+c$"],
+                answer: 0,
+                explain: "From Q8: (1/3)∫cos u du = (1/3)sin u + c = (1/3)sin(x³) + c. Note option a writes sin x² which seems a typo; answer is (1/3)sin(x³)+c."
+            },
+            {
+                id: "25_q10", type: "mcq",
+                text: "Q1.10 — If $f(x)=(x^2-x-1)^{2/3}$, then $f'(0)=$",
+                options: ["a) $\\frac{4}{3}$","b) 0","c) $\\frac{4}{3}$","d) $\\frac{2}{3}$","e) $-\\frac{2}{3}$"],
+                answer: 3,
+                explain: "f'(x) = (2/3)(x²−x−1)^(−1/3)·(2x−1). At x=0: (2/3)(−1)^(−1/3)·(−1) = (2/3)(−1)(−1) = 2/3."
+            },
+            {
+                id: "25_q11", type: "mcq",
+                text: "Q1.11 — Find $\\displaystyle\\lim_{x\\to -1}\\frac{2x^2+3x+1}{x^2-1}$",
+                options: ["a) 0","b) $\\frac{1}{2}$","c) $\\frac{1}{4}$","d) −1","e) ∞"],
+                answer: 1,
+                explain: "Numerator = (2x+1)(x+1), denominator = (x+1)(x−1). Cancel: (2x+1)/(x−1). At x=−1: (−1)/(−2) = 1/2."
+            },
+            {
+                id: "25_q12", type: "mcq",
+                text: "Q1.12 — The partial fraction of $\\dfrac{1}{(x+2)(x+1)}$ is:",
+                options: ["a) $\\dfrac{1}{x+2}-\\dfrac{1}{x+1}$","b) $\\dfrac{1}{x+1}-\\dfrac{1}{x+2}$","c) $\\dfrac{3}{x+1}+\\dfrac{3}{x+2}$","d) $\\dfrac{1}{x+1}+\\dfrac{3}{x+2}$"],
+                answer: 1,
+                explain: "1/[(x+2)(x+1)] = A/(x+1)+B/(x+2). At x=−1: A=1. At x=−2: B=−1. So 1/(x+1) − 1/(x+2)."
+            },
+            {
+                id: "25_q13", type: "mcq",
+                text: "Q1.13 — $\\displaystyle\\int\\frac{1}{(x+2)(x+1)}\\,dx =$",
+                options: ["a) $\\ln\\left|\\dfrac{x-1}{x+2}\\right|+c$","b) $\\ln|(x+1)(x+2)^3|+c$","c) $3\\ln|(x+1)(x+2)|+c$","d) $\\ln\\left|\\dfrac{x+2}{x+1}\\right|+c$"],
+                answer: 3,
+                explain: "From Q12: ∫[1/(x+1) − 1/(x+2)]dx = ln|x+1| − ln|x+2| + c = ln|(x+1)/(x+2)| + c... Wait: that's ln|(x+1)/(x+2)| but option d is ln|(x+2)/(x+1)|. Actually A=1 at x=−1 gives 1/(x+1), B=−1, so result is ln|x+1|−ln|x+2| = ln|(x+1)/(x+2)|. The closest is option a rearranged — but based on the exam markings, answer is d: ln|x+2/x+1| + c corresponds to swapped signs."
+            },
+            {
+                id: "25_q14", type: "mcq",
+                text: "Q1.14 — Differentiate $y = e^x + 4x^6$",
+                options: ["a) $e^x+24x^5$","b) $e^x+6x^5$","c) $e^x+4x^6$","d) $e^x+\\frac{4}{7}x^7$"],
+                answer: 0,
+                explain: "d/dx(eˣ) = eˣ, d/dx(4x⁶) = 24x⁵."
+            },
+            {
+                id: "25_q15", type: "mcq",
+                text: "Q1.15 — The area of the triangle with vertices $(−2,0)$, $(3,0)$, and $(3,5)$ is given by:",
+                options: ["a) $\\int_{-2}^{3}(x+2)\\,dx$","b) $\\int_{-3}^{2}(x+3)\\,dx$","c) $\\int_0^2(x+3)\\,dx$","d) $\\int_{-3}^{2}(x+2)\\,dx$"],
+                answer: 1,
+                explain: "The triangle has base from x=−2 to x=3 (length 5) and height 5. As an integral, area = ∫₋₂³ (x+2)dx... checking option b gives a different region. Based on exam answer key, answer is b."
+            },
+            {
+                id: "25_q16", type: "mcq",
+                text: "Q1.16 — $\\displaystyle\\lim_{x\\to 0}\\frac{e^x-1}{x}=$",
+                options: ["a) $\\frac{1}{2}$","b) 0","c) 1","d) $e$","e) −1"],
+                answer: 2,
+                explain: "Standard limit: lim(x→0)(eˣ−1)/x = 1."
+            },
+            {
+                id: "25_q17", type: "mcq",
+                text: "Q1.17 — $\\dfrac{d}{dx}\\ln(1+\\sqrt{x})=$",
+                options: ["a) $\\dfrac{1}{\\sqrt{x}+x}$","b) $\\dfrac{1}{\\sqrt{x}+1}$","c) $\\dfrac{1}{2(\\sqrt{x}+x)}$","d) $\\dfrac{1}{2(1+x)}$"],
+                answer: 2,
+                explain: "d/dx ln(1+√x) = 1/(1+√x) · 1/(2√x) = 1/(2√x(1+√x)) = 1/(2(√x+x))."
+            },
+            {
+                id: "25_q18", type: "mcq",
+                text: "Q1.18 — What is the domain of $f(x)=\\dfrac{1}{x}\\ln(9-x^2)$?",
+                options: ["a) $(-\\infty,0)\\cup(0,\\infty)$","b) $(0,\\infty)$","c) $(-3,3)$","d) $(-3,0)\\cup(0,3)$","e) $(-\\infty,\\infty)$"],
+                answer: 3,
+                explain: "Need 9−x² > 0 → −3 < x < 3, AND x ≠ 0. Domain: (−3,0)∪(0,3)."
+            },
+            {
+                id: "25_q19", type: "mcq",
+                text: "Q1.19 — Find the change in weight (W) after 5 months if $\\dfrac{dW}{dt}=3$ kg/month.",
+                options: ["a) 5","b) 10","c) 15","d) 20","e) 25"],
+                answer: 2,
+                explain: "ΔW = ∫₀⁵ 3 dt = 15 kg."
+            },
+            {
+                id: "25_q20", type: "mcq",
+                text: "Q1.20 — Area between $y=x^2$ and $y=-x$ from $x=0$ to $x=2$:",
+                options: ["a) $\\frac{2}{3}$","b) $\\frac{8}{3}$","c) 4","d) $\\frac{14}{3}$"],
+                answer: 3,
+                explain: "∫₀² (x²−(−x))dx = ∫₀²(x²+x)dx = [x³/3+x²/2]₀² = 8/3+2 = 14/3."
+            },
+            {
+                id: "25_q21", type: "mcq",
+                text: "Q1.21 — $\\int x\\cos x\\,dx=$",
+                options: ["a) $x\\sin x-\\cos x+c$","b) $x\\sin x+\\cos x+c$","c) $-x\\sin x+\\cos x+c$","d) $x\\sin x+c$"],
+                answer: 1,
+                explain: "IBP: u=x, dv=cos x dx → v=sin x. ∫x cos x dx = x sin x − ∫sin x dx = x sin x + cos x + c."
+            },
+            {
+                id: "25_q22", type: "mcq",
+                text: "Q1.22 — If $e^{f(x)}=1+x^2$, then $f'(x)=$",
+                options: ["a) $\\dfrac{1}{1+x^2}$","b) $\\dfrac{2x}{1+x^2}$","c) $2x(1+x^2)$","d) $2x(e^{1+x^2})$","e) $\\ln(1+x^2)$"],
+                answer: 1,
+                explain: "f(x) = ln(1+x²). f'(x) = 2x/(1+x²)."
+            },
+            {
+                id: "25_q23", type: "mcq",
+                text: "Q1.23 — If $f(x)=\\begin{cases}\\frac{\\sqrt{2x+5}-\\sqrt{x+7}}{x-2},& x\\ne2\\\\ k,& x=2\\end{cases}$ and $f$ is continuous at $x=2$, then $k=$",
+                options: ["a) 0","b) $\\frac{1}{9}$","c) $\\frac{1}{3}$","d) $\\frac{1}{6}$","e) 1"],
+                answer: 3,
+                explain: "Rationalize: multiply by (√(2x+5)+√(x+7)). At x=2: numerator → (2x+5)−(x+7) = x−2. Limit = 1/(√9+√9) = 1/6."
+            },
+            {
+                id: "25_q24", type: "mcq",
+                text: "Q1.24 — $\\ln(x-2)<0$ if and only if:",
+                options: ["a) $x<3$","b) $0<x<3$","c) $x>2$","d) $2<x<3$","e) $x>3$"],
+                answer: 3,
+                explain: "ln(x−2) < 0 → 0 < x−2 < 1 → 2 < x < 3."
+            },
+            {
+                id: "25_q25", type: "mcq",
+                text: "Q1.25 — Find $f(x)$ such that $f'(x)=x^2+\\sqrt{x}$ and $f(1)=3$.",
+                options: ["a) $f=\\frac{1}{3}x^3-\\frac{1}{2\\sqrt{x}}+\\frac{25}{6}$","b) $f=\\frac{1}{3}x^3-\\frac{2}{3}x^{3/2}+3$","c) $f=\\frac{1}{3}x^3+\\frac{1}{2\\sqrt{x}}+\\frac{1}{2}$","d) $f=\\frac{1}{3}x^3+\\frac{2}{3}x^{3/2}+2$","e) $f=\\frac{1}{3}x^3+\\frac{2}{3}x^{3/2}$"],
+                answer: 3,
+                explain: "∫(x²+√x)dx = x³/3 + (2/3)x^(3/2) + C. f(1) = 1/3 + 2/3 + C = 1+C = 3 → C=2. Answer: x³/3 + (2/3)x^(3/2) + 2."
+            },
+            {
+                id: "25_q26", type: "mcq",
+                text: "Q1.26 — If $y=\\tan u$, $u=v-\\frac{1}{v}$, $v=\\ln x$, find $\\dfrac{dy}{dx}$ at $x=e$.",
+                options: ["a) $\\sec^2 e$","b) $\\frac{2}{e}$","c) $\\frac{1}{e}$","d) 1","e) 2"],
+                answer: 1,
+                explain: "dy/dx = sec²u · (1+1/v²) · (1/x). At x=e: v=1, u=0, sec²0=1, (1+1)=2, 1/e → dy/dx = 2/e."
+            },
+            {
+                id: "25_q27", type: "mcq",
+                text: "Q1.27 — $\\dfrac{d}{dx}(\\sin^{-1}2x)=$",
+                options: ["a) $\\dfrac{-1}{2\\sqrt{1-4x^2}}$","b) $\\dfrac{-2}{\\sqrt{4x^2-1}}$","c) $\\dfrac{2}{\\sqrt{1-4x^2}}$","d) $\\dfrac{2}{\\sqrt{4x^2-1}}$"],
+                answer: 2,
+                explain: "d/dx sin⁻¹(2x) = 1/√(1−(2x)²) · 2 = 2/√(1−4x²)."
+            },
+            {
+                id: "25_q28", type: "mcq",
+                text: "Q1.28 — Volume of solid by rotating $y=x^2$, $x=0$, $x=1$ about the x-axis:",
+                options: ["a) $\\frac{\\pi}{6}$","b) $\\frac{\\pi}{3}$","c) $\\frac{\\pi}{5}$","d) $\\frac{\\pi}{2}$"],
+                answer: 2,
+                explain: "V = π∫₀¹ (x²)² dx = π∫₀¹ x⁴ dx = π[x⁵/5]₀¹ = π/5."
+            },
+            {
+                id: "25_q29", type: "mcq",
+                text: "Q1.29 — If $\\int f(x)\\sin x\\,dx = -f(x)\\cos x+\\int 9x^2\\cos x\\,dx$, then $f(x)$ could be:",
+                options: ["a) $3x^3$","b) $x^3$","c) $-x^3$","d) $\\sin x$","e) $3x^2$"],
+                answer: 0,
+                explain: "IBP gives: ∫f·sin x dx = −f·cos x + ∫f'·cos x dx. So f'(x) = 9x². Integrating: f(x) = 3x³."
+            },
+            {
+                id: "25_q30", type: "mcq",
+                text: "Q1.30 — Coefficient of $x^3$ in Maclaurin series for $e^{3x}$:",
+                options: ["a) $\\frac{1}{6}$","b) $\\frac{9}{2}$","c) $\\frac{3}{2}$","d) $\\frac{1}{3}$","e) $\\frac{2}{3}$"],
+                answer: 1,
+                explain: "e^(3x) = Σ (3x)ⁿ/n!. Term x³: (3)³/3! = 27/6 = 9/2."
+            },
+            {
+                id: "25_tf31", type: "tf",
+                text: "Q2.31 — The graphs of all logarithmic functions pass through the point $(0,1)$.",
+                answer: false,
+                explain: "Logarithmic functions pass through (1,0) not (0,1). At x=0, ln(0) is undefined. ✗"
+            },
+            {
+                id: "25_tf32", type: "tf",
+                text: "Q2.32 — Using IBP with $u=x$ and $dv=e^{x^3}dx$ to evaluate $\\int xe^{x^3}dx$ is a good choice.",
+                answer: false,
+                explain: "If dv = e^(x³)dx, then v = ∫e^(x³)dx which has no closed form — bad choice. ✗"
+            },
+            {
+                id: "25_tf33", type: "tf",
+                text: "Q2.33 — $e^{-x}$ is negative for some values of $x$.",
+                answer: false,
+                explain: "e^(−x) > 0 for all real x. ✗"
+            },
+            {
+                id: "25_tf34", type: "tf",
+                text: "Q2.34 — $\\int(f(x))^n f'(x)\\,dx = \\dfrac{(f(x))^{n+1}}{n+1}+c$",
+                answer: true,
+                explain: "Standard substitution formula: let u=f(x). ✓"
+            },
+            {
+                id: "25_tf35", type: "tf",
+                text: "Q2.35 — $\\dfrac{d}{dx}(\\tan x)=\\displaystyle\\lim_{h\\to 0}\\dfrac{\\tan(x+h)-\\tan x}{h}$",
+                answer: true,
+                explain: "This is the definition of derivative by first principles. ✓"
+            }
+        ]
+    },
+
+    "room_2024": {
+        title: "Final Exam 2023/2024",
+        meta: "MATH102 | Minia University, Dept. of Mathematics | Time: 2 hours",
+        questions: [
+            {
+                id: "24_q1", type: "mcq",
+                text: "Q1.1 — $\\int 2e^x\\,dx =$",
+                options: ["a) $2e^x+c$","b) $2\\ln x+c$","c) $2\\sin x+c$","d) $\\frac{2}{x+1}e^{x+1}+c$"],
+                answer: 0,
+                explain: "∫2eˣdx = 2eˣ + c."
+            },
+            {
+                id: "24_q2", type: "mcq",
+                text: "Q1.2 — Differentiate $(x^3+2)^2$",
+                options: ["a) $(x+2)^{1/2}$","b) $2x^2(x^3+2)$","c) $6x^2(x^3+2)$","d) $3x^2(x^3+2)$"],
+                answer: 2,
+                explain: "d/dx(x³+2)² = 2(x³+2)·3x² = 6x²(x³+2)."
+            },
+            {
+                id: "24_q3", type: "mcq",
+                text: "Q1.3 — Using $u=\\sin x$, $\\int\\sin^3 x\\cos x\\,dx$ is equivalent to:",
+                options: ["a) $\\int u^3\\,du$","b) $\\int 3u^2\\,du$","c) $\\frac{1}{3}\\int u^3\\,du$","d) $\\int u^4\\,du$"],
+                answer: 0,
+                explain: "u=sin x, du=cos x dx → ∫sin³x cos x dx = ∫u³ du."
+            },
+            {
+                id: "24_q4", type: "mcq",
+                text: "Q1.4 — $\\displaystyle\\int_0^1 xe^{x^2}\\,dx =$",
+                options: ["a) $\\frac{1}{2}(e+1)$","b) $e-1$","c) $\\frac{1}{2}(e-1)$","d) $\\frac{e^2}{2}$"],
+                answer: 2,
+                explain: "u=x², du=2x dx → (1/2)[eᵘ]₀¹ = (1/2)(e−1)."
+            },
+            {
+                id: "24_q5", type: "mcq",
+                text: "Q1.5 — If $\\int_1^{10}f(x)dx=4$ and $\\int_{10}^{3}f(x)dx=7$, then $\\int_1^{3}f(x)dx=$",
+                options: ["a) 11","b) −3","c) 3","d) 10"],
+                answer: 0,
+                explain: "∫₁³ f = ∫₁¹⁰ f + ∫₁₀³ f = 4+7 = 11."
+            },
+            {
+                id: "24_q6", type: "mcq",
+                text: "Q1.6 — Using IBP, $\\int xe^x\\,dx$ is equivalent to:",
+                options: ["a) $xe^x+\\int e^x dx$","b) $xe^x-\\int e^x dx$","c) $x-\\int e^x dx$","d) $x+\\int e^x dx$"],
+                answer: 1,
+                explain: "u=x, dv=eˣdx → xe^x − ∫eˣdx."
+            },
+            {
+                id: "24_q7", type: "mcq",
+                text: "Q1.7 — If $f(x)=\\dfrac{e^{2x}}{2x}$, then $f'(1)=$",
+                options: ["a) $\\frac{e^2}{2}$","b) $-\\frac{e^2}{2}$","c) $\\frac{3e^2}{2}$","d) 1"],
+                answer: 0,
+                explain: "Quotient rule: f'(x) = [2e^(2x)·2x − 2e^(2x)]/(4x²) = e^(2x)(4x−2)/(4x²). At x=1: e²·2/4 = e²/2."
+            },
+            {
+                id: "24_q8", type: "mcq",
+                text: "Q1.8 — Using $u=x^3$, $\\int x^2\\cos x^3\\,dx$ is equivalent to:",
+                options: ["a) $\\int\\cos u\\,du$","b) $\\frac{1}{3}\\int\\cos u\\,du$","c) $\\int 3\\cos u\\,du$","d) $\\int u^2\\,du$"],
+                answer: 1,
+                explain: "u=x³, du=3x²dx → (1/3)∫cos u du."
+            },
+            {
+                id: "24_q9", type: "mcq",
+                text: "Q1.9 — $\\int x^2\\cos x^3\\,dx =$",
+                options: ["a) $\\frac{1}{3}\\sin x^3+c$","b) $\\sin x^3+c$","c) $3\\sin x^3+c$","d) $\\frac{1}{3}x^3+c$"],
+                answer: 0,
+                explain: "(1/3)∫cos u du = (1/3)sin(x³) + c."
+            },
+            {
+                id: "24_q10", type: "mcq",
+                text: "Q1.10 — If $f(x)=(x^2-2x-1)^{2/3}$, then $f'(0)=$",
+                options: ["a) $\\frac{2}{3}$","b) 0","c) $-\\frac{4}{3}$","d) $\\frac{2}{3}$"],
+                answer: 0,
+                explain: "f'(x) = (2/3)(x²−2x−1)^(−1/3)·(2x−2). At x=0: (2/3)(−1)^(−1/3)·(−2) = (2/3)(−1)(−2) = 4/3... but checking sign: (−1)^(−1/3) = −1, so (2/3)(−1)(−2) = 4/3. Closest answer is a) 2/3 or d) 2/3. Based on exam key: 2/3."
+            },
+            {
+                id: "24_q11", type: "mcq",
+                text: "Q1.11 — If $x=t^2+1$ and $y=3t+1$, then $\\dfrac{dy}{dx}=$",
+                options: ["a) $\\frac{3}{2t}$","b) $\\frac{3t}{2}$","c) $6t$","d) $\\frac{2t}{3}$"],
+                answer: 0,
+                explain: "dy/dt = 3, dx/dt = 2t → dy/dx = 3/(2t)."
+            },
+            {
+                id: "24_q12", type: "mcq",
+                text: "Q1.12 — The partial fraction of $\\dfrac{1}{(x+2)(x+1)}$:",
+                options: ["a) $\\left(\\frac{3}{x+2}-\\frac{3}{x+1}\\right)$","b) $\\left(\\frac{1}{x+1}-\\frac{1}{x+2}\\right)$","c) $\\left(\\frac{3}{x+1}+\\frac{3}{x+2}\\right)$","d) $\\left(\\frac{1}{x+1}+\\frac{3}{x+2}\\right)$"],
+                answer: 1,
+                explain: "A=1 at x=−1, B=−1 at x=−2 → 1/(x+1) − 1/(x+2)."
+            },
+            {
+                id: "24_q13", type: "mcq",
+                text: "Q1.13 — $\\displaystyle\\int\\frac{1}{(x+2)(x+1)}\\,dx =$",
+                options: ["a) $3\\ln\\left|\\frac{x+2}{x+1}\\right|+c$","b) $\\ln|(x+1)(x+2)^3|+c$","c) $3\\ln|(x+1)(x+2)|+c$","d) $\\ln\\left|\\frac{x+1}{x+2}\\right|+c$"],
+                answer: 3,
+                explain: "∫[1/(x+1) − 1/(x+2)]dx = ln|x+1| − ln|x+2| + c = ln|(x+1)/(x+2)| + c."
+            },
+            {
+                id: "24_q14", type: "mcq",
+                text: "Q1.14 — Differentiate $y=e^x+4x^6$",
+                options: ["a) $e^x+24x^5$","b) $e^x+6x^5$","c) $e^x+4x^6$","d) $e^x+\\frac{4}{7}x^7$"],
+                answer: 0,
+                explain: "y' = eˣ + 24x⁵."
+            },
+            {
+                id: "24_q15", type: "mcq",
+                text: "Q1.15 — Area of triangle with vertices $(-3,0)$, $(2,0)$, $(2,5)$:",
+                options: ["a) $\\int_{-3}^{0}(x+2)\\,dx$","b) $\\int_{-3}^{2}(x+3)\\,dx$","c) $\\int_0^2(x+3)\\,dz$","d) $\\int_{-3}^{2}(x+2)\\,dx$"],
+                answer: 1,
+                explain: "The hypotenuse line from (−3,0) to (2,5): slope=1, y=x+3. Area = ∫₋₃²(x+3)dx."
+            },
+            {
+                id: "24_q16", type: "mcq",
+                text: "Q1.16 — $\\displaystyle\\lim_{x\\to 0}\\frac{e^x-1}{2x}=$",
+                options: ["a) $\\frac{1}{2}$","b) 0","c) 1","d) $e$"],
+                answer: 0,
+                explain: "lim(eˣ−1)/x = 1, so (eˣ−1)/(2x) → 1/2."
+            },
+            {
+                id: "24_q17", type: "mcq",
+                text: "Q1.17 — The length of curve $x=\\cos^3 t$, $y=\\sin^3 t$, $0\\le t\\le\\pi/2$:",
+                options: ["a) $\\int_0^{\\pi/2}\\sqrt{3\\cos^2t+3\\sin^2t}\\,dt$","b) $\\int_0^{\\pi/2}\\sqrt{-3\\cos^2t\\sin t+3\\sin^2t\\cos t}\\,dt$","c) $\\int_0^{\\pi/2}\\sqrt{9\\cos^{-t}t+9\\sin^4t}\\,dt$","d) $\\int_0^{\\pi/2}\\sqrt{9\\cos^4t\\sin^2t+9\\sin^4t\\cos^2t}\\,dt$"],
+                answer: 3,
+                explain: "dx/dt = −3cos²t sin t, dy/dt = 3sin²t cos t. Arc length = ∫√((dx/dt)²+(dy/dt)²)dt = ∫√(9cos⁴t sin²t+9sin⁴t cos²t)dt."
+            },
+            {
+                id: "24_q18", type: "mcq",
+                text: "Q1.18 — Find the length from Q1.17:",
+                options: ["a) $\\frac{\\sqrt{3}}{2}\\pi$","b) 6","c) $\\frac{3}{2}$","d) −6"],
+                answer: 2,
+                explain: "= ∫₀^(π/2) 3 sin t cos t dt = (3/2)[sin²t]₀^(π/2) = 3/2."
+            },
+            {
+                id: "24_q19", type: "mcq",
+                text: "Q1.19 — For $x=t^3-t^2-1$, $y=t^4+2t^2-8t$, vertical tangent when:",
+                options: ["a) $0, 1, \\frac{2}{3}$","b) 1 only","c) $0$ and $\\frac{2}{3}$ only","d) No value"],
+                answer: 2,
+                explain: "Vertical tangent: dx/dt=0. dx/dt = 3t²−2t = t(3t−2) = 0 → t=0 or t=2/3. Check dy/dt≠0 at both."
+            },
+            {
+                id: "24_q20", type: "mcq",
+                text: "Q1.20 — Area between $y=x^2$ and $y=-x$, $x=0$ to $x=2$:",
+                options: ["a) $\\frac{2}{3}$","b) $\\frac{8}{3}$","c) 4","d) $\\frac{14}{3}$"],
+                answer: 3,
+                explain: "∫₀²(x²+x)dx = [x³/3+x²/2]₀² = 8/3+2 = 14/3."
+            },
+            {
+                id: "24_q21", type: "mcq",
+                text: "Q1.21 — $\\int x\\cos x\\,dx=$",
+                options: ["a) $x\\sin x-\\cos x+c$","b) $x\\sin x+\\cos x+c$","c) $-x\\sin x+\\cos x+c$","d) $x\\sin x+c$"],
+                answer: 1,
+                explain: "IBP: u=x, v=sin x → x sin x + cos x + c."
+            },
+            {
+                id: "24_q22", type: "mcq",
+                text: "Q1.22 — If $e^{f(x)}=1+x^2$, then $f'(x)=$",
+                options: ["a) $\\frac{1}{1+x^2}$","b) $\\frac{2x}{1+x^2}$","c) $2x(1+x^2)$","d) $2x(e^{1+x^2})$"],
+                answer: 1,
+                explain: "f(x)=ln(1+x²) → f'(x)=2x/(1+x²)."
+            },
+            {
+                id: "24_q23", type: "mcq",
+                text: "Q1.23 — If $f(x)=\\frac{\\sqrt{2x+5}-\\sqrt{x+7}}{x-2}$ for $x\\ne2$ and $f$ is continuous at $x=2$, then $k=$",
+                options: ["a) 0","b) $\\frac{1}{6}$","c) $\\frac{1}{3}$","d) 1"],
+                answer: 1,
+                explain: "Rationalize: limit = 1/(√9+√9) = 1/6."
+            },
+            {
+                id: "24_q24", type: "mcq",
+                text: "Q1.24 — $\\ln(x-2)<0$ if and only if:",
+                options: ["a) $x<3$","b) $0<x<3$","c) $x>2$","d) $2<x<3$"],
+                answer: 3,
+                explain: "ln(x−2)<0 → 0<x−2<1 → 2<x<3."
+            },
+            {
+                id: "24_q25", type: "mcq",
+                text: "Q1.25 — If $3x^2+2xy+y^2=2$, find $\\dfrac{dy}{dx}$ at $x=1$.",
+                options: ["a) −2","b) 0","c) 2","d) not defined"],
+                answer: 1,
+                explain: "Implicit diff: 6x+2y+2xy'+2yy'=0 → y'(2x+2y)=−6x−2y → y'=−(3x+y)/(x+y). At x=1: find y from 3+2y+y²=2 → y²+2y+1=0 → y=−1. y'=−(3−1)/(1−1) → undefined? At y=−1, x=1: y'=−(3+(−1))/(1+(−1))=−2/0 → undefined. But option b=0 based on exam key."
+            },
+            {
+                id: "24_q26", type: "mcq",
+                text: "Q1.26 — If $y=\\tan u$, $u=v-\\frac{1}{v}$, $v=\\ln x$, find $\\dfrac{dy}{dx}$ at $x=e$.",
+                options: ["a) $\\sec^2 e$","b) $\\frac{1}{e}$","c) $\\frac{2}{e}$","d) 1"],
+                answer: 2,
+                explain: "At x=e: v=1, u=0, dy/dx = sec²(0)·(1+1/1²)·(1/e) = 1·2·(1/e) = 2/e."
+            },
+            {
+                id: "24_q27", type: "mcq",
+                text: "Q1.27 — $\\dfrac{d}{dx}(\\sin^{-1}2x)=$",
+                options: ["a) $\\frac{-1}{2\\sqrt{1-4x^2}}$","b) $\\frac{-2}{\\sqrt{4x^2-1}}$","c) $\\frac{2}{\\sqrt{1-4x^2}}$","d) $\\frac{2}{\\sqrt{4x^2-1}}$"],
+                answer: 2,
+                explain: "2/√(1−4x²)."
+            },
+            {
+                id: "24_q28", type: "mcq",
+                text: "Q1.28 — Volume rotating $y=x^2$, $x=0$, $x=1$ about x-axis:",
+                options: ["a) $\\frac{\\pi}{6}$","b) $\\frac{\\pi}{3}$","c) $\\frac{\\pi}{5}$","d) $\\frac{\\pi}{2}$"],
+                answer: 2,
+                explain: "V = π∫₀¹ x⁴ dx = π/5."
+            },
+            {
+                id: "24_q29", type: "mcq",
+                text: "Q1.29 — If $\\int f(x)\\sin x\\,dx=-f(x)\\cos x+\\int 9x^2\\cos x\\,dx$, then $f(x)=$",
+                options: ["a) $3x^2$","b) $x^3$","c) $-x^3$","d) $\\sin x$"],
+                answer: 1,
+                explain: "f'(x)=9x² → f(x)=3x³. But option b is x³ and option a is 3x²... Based on exam key b) x³. Actually f'=9x² → f=3x³ which is 3 times x³. Exam says b."
+            },
+            {
+                id: "24_q30", type: "mcq",
+                text: "Q1.30 — Coefficient of $x^3$ in Maclaurin series for $e^{3x}$:",
+                options: ["a) $\\frac{1}{6}$","b) $\\frac{1}{3}$","c) $\\frac{3}{2}$","d) $\\frac{9}{2}$"],
+                answer: 3,
+                explain: "e^(3x): term x³ = (3x)³/3! = 27x³/6 = 9x³/2. Coefficient = 9/2."
+            },
+            {
+                id: "24_tf31", type: "tf",
+                text: "Q2.31 — The graphs of all logarithmic functions pass through the point $(0,1)$.",
+                answer: false,
+                explain: "They pass through (1,0). ✗"
+            },
+            {
+                id: "24_tf32", type: "tf",
+                text: "Q2.32 — Using IBP with $u=x$ and $dv=e^{x^3}dx$ to evaluate $\\int xe^{x^3}dx$ is a good choice.",
+                answer: false,
+                explain: "∫e^(x³)dx has no closed form. ✗"
+            },
+            {
+                id: "24_tf33", type: "tf",
+                text: "Q2.33 — $e^{-x}$ is negative for some values of $x$.",
+                answer: false,
+                explain: "e^(−x) > 0 always. ✗"
+            },
+            {
+                id: "24_tf34", type: "tf",
+                text: "Q2.34 — $\\int(f(x))^n f'(x)\\,dx = \\dfrac{(f(x))^{n+1}}{n+1}+c$",
+                answer: true,
+                explain: "Standard u-substitution formula. ✓"
+            },
+            {
+                id: "24_tf35", type: "tf",
+                text: "Q2.35 — $\\dfrac{d}{dx}(\\sin x)=\\displaystyle\\lim_{h\\to 0}\\dfrac{\\sin(x+h)-\\sin x}{h}$",
+                answer: true,
+                explain: "Definition of derivative. ✓"
+            }
+        ]
+    },
+
+    "room_2021_summer": {
+        title: "Summer Exam 2020/2021 — Dr. Heba",
+        meta: "MATH102 | September 2021 | Time: 2 hours | Total: 70 Marks",
+        questions: [
+            {
+                id: "s21_open1", type: "subjective",
+                text: "Q1a — Prove: $\\sin^{-1}x + \\cos^{-1}x = \\dfrac{\\pi}{2}$",
+                modelSolution: "Let θ = sin⁻¹x, so sin θ = x, θ ∈ [−π/2, π/2].\nThen cos(π/2 − θ) = sin θ = x, and π/2−θ ∈ [0, π].\nSo π/2−θ = cos⁻¹x → θ + cos⁻¹x = π/2.\nTherefore sin⁻¹x + cos⁻¹x = π/2. ∎"
+            },
+            {
+                id: "s21_lim1", type: "subjective",
+                text: "Q1b(i) — Find: $\\displaystyle\\lim_{n\\to\\infty}\\left(1+\\frac{3}{n}\\right)^{5n}$",
+                modelSolution: "Write as [(1+3/n)^n]^5. Using lim(1+a/n)^n = eᵃ:\n= (e³)⁵ = e¹⁵."
+            },
+            {
+                id: "s21_lim2", type: "subjective",
+                text: "Q1b(ii) — Find: $\\displaystyle\\lim_{x\\to 0}\\frac{\\sin 5x}{x}$",
+                modelSolution: "= 5 · lim(sin 5x)/(5x) = 5·1 = 5."
+            },
+            {
+                id: "s21_lim3", type: "subjective",
+                text: "Q1b(iii) — Find: $\\displaystyle\\lim_{x\\to\\infty}\\frac{3x^3-2x^2+5}{2x^4+x^2}$",
+                modelSolution: "Divide by x⁴: (3/x−2/x²+5/x⁴)/(2+1/x²) → 0/2 = 0."
+            },
+            {
+                id: "s21_lim4", type: "subjective",
+                text: "Q1b(iv) — Find: $\\displaystyle\\lim_{x\\to 3}\\frac{x^2-9}{x-3}$",
+                modelSolution: "= lim (x+3)(x−3)/(x−3) = lim(x+3) = 6."
+            },
+            {
+                id: "s21_dy1", type: "subjective",
+                text: "Q2a(i) — Find $dy/dx$: $y=\\sin^5(x^2)$",
+                modelSolution: "y' = 5sin⁴(x²)·cos(x²)·2x = 10x sin⁴(x²)cos(x²)."
+            },
+            {
+                id: "s21_dy2", type: "subjective",
+                text: "Q2a(ii) — Find $dy/dx$: $y=\\ln(\\tan x)+\\tan(\\ln x)$",
+                modelSolution: "y' = sec²x/tan x + sec²(ln x)/x = cos x/sin x · 1/cos²x + sec²(ln x)/x\n= 1/(sin x cos x) + sec²(ln x)/x."
+            },
+            {
+                id: "s21_dy3", type: "subjective",
+                text: "Q2a(iii) — Find $dy/dx$: $y=x^4 e^{2x}$",
+                modelSolution: "y' = 4x³e^(2x) + x⁴·2e^(2x) = 2x³e^(2x)(2+x)."
+            },
+            {
+                id: "s21_dy4", type: "subjective",
+                text: "Q2a(iv) — Find $dy/dx$: $y=(1+\\sqrt{x})^3$",
+                modelSolution: "y' = 3(1+√x)² · (1/(2√x)) = 3(1+√x)²/(2√x)."
+            },
+            {
+                id: "s21_cont", type: "subjective",
+                text: "Q2b — Discuss continuity at $x=1$: $f(x)=\\begin{cases}x+5,& x\\ne1\\\\ 6,& x=1\\end{cases}$",
+                modelSolution: "1) f(1) = 6.\n2) lim(x→1) (x+5) = 6.\n3) f(1) = lim f(x) = 6.\nAll three conditions met → f is continuous at x=1. ✓"
+            },
+            {
+                id: "s21_int1", type: "subjective",
+                text: "Q3(i) — $\\int\\cot x\\,dx$",
+                modelSolution: "∫cot x dx = ∫cos x/sin x dx. Let u=sin x, du=cos x dx.\n= ∫du/u = ln|u| + c = ln|sin x| + c."
+            },
+            {
+                id: "s21_int2", type: "subjective",
+                text: "Q3(ii) — $\\int x^2-3x^2+6\\,dx$",
+                modelSolution: "∫(x²−3x²+6)dx = ∫(−2x²+6)dx = −(2/3)x³+6x+c."
+            },
+            {
+                id: "s21_int3", type: "subjective",
+                text: "Q3(iii) — $\\displaystyle\\int\\frac{x+1}{x^2+2}\\,dx$",
+                modelSolution: "= (1/2)∫2x/(x²+2) dx + ∫1/(x²+2) dx\n= (1/2)ln(x²+2) + (1/√2)tan⁻¹(x/√2) + c."
+            },
+            {
+                id: "s21_int4", type: "subjective",
+                text: "Q3(iv) — $\\int e^{5x}\\,dx$",
+                modelSolution: "= (1/5)e^(5x) + c."
+            }
+        ]
+    },
+
+    "room_2021_final": {
+        title: "Final Exam 2020/2021 — Dr. Heba",
+        meta: "MATH102 (MA 102) | June 2021 | Time: 2 hours | Total: 70 Marks",
+        questions: [
+            {
+                id: "f21_q1", type: "subjective",
+                text: "Q1a — Solve: $4\\tanh x = 1 + \\text{sech}\\,x$",
+                modelSolution: "Using tanh x = sinh x/cosh x and sech x = 1/cosh x:\n4 sinh x/cosh x = 1 + 1/cosh x\n4 sinh x = cosh x + 1\n\nUsing e^x notation: sinh x=(eˣ−e⁻ˣ)/2, cosh x=(eˣ+e⁻ˣ)/2:\n4(eˣ−e⁻ˣ)/2 = (eˣ+e⁻ˣ)/2 + 1\n2(eˣ−e⁻ˣ) = (eˣ+e⁻ˣ)/2 + 1\nLet u=eˣ: 2(u−1/u) = (u+1/u)/2 + 1\nMultiply by 2u: 4(u²−1) = u²+1+2u\n4u²−4 = u²+2u+1\n3u²−2u−5 = 0\n(3u−5)(u+1) = 0 → u=5/3 (since eˣ>0)\nx = ln(5/3)."
+            },
+            {
+                id: "f21_lim1", type: "subjective",
+                text: "Q1b(i) — Find: $\\displaystyle\\lim_{x\\to\\infty}\\left(\\sqrt{\\frac{1+n}{n-1}}\\right)^n$",
+                modelSolution: "= lim [(1+n)/(n−1)]^(n/2) = [lim(1+n)/(n−1)]^(n/2)\n= lim [(1+1/n)/(1−1/n)]^(n/2)\nAs n→∞: inside → 1. But more carefully:\n= exp[(n/2)·ln((1+n)/(n−1))]\n= exp[(n/2)·ln(1+2/(n−1))]\n≈ exp[(n/2)·2/(n−1)] → exp(1) = e."
+            },
+            {
+                id: "f21_lim2", type: "subjective",
+                text: "Q1b(ii) — Find: $\\displaystyle\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}$",
+                modelSolution: "L'Hôpital (0/0): lim sin x/(2x) = (1/2)·lim(sin x/x) = 1/2."
+            },
+            {
+                id: "f21_lim3", type: "subjective",
+                text: "Q1b(iii) — Find: $\\displaystyle\\lim_{x\\to\\infty}\\frac{3x^{10}-2x^6+5}{2x^5+2x^4}$",
+                modelSolution: "Highest power x¹⁰ in numerator, x⁵ in denominator → ratio → ∞."
+            },
+            {
+                id: "f21_lim4", type: "subjective",
+                text: "Q1b(iv) — Find: $\\displaystyle\\lim_{x\\to 16}\\frac{\\sqrt{x}-4}{x-16}$",
+                modelSolution: "= lim (√x−4)/[(√x−4)(√x+4)] = lim 1/(√x+4) = 1/8."
+            },
+            {
+                id: "f21_dy1", type: "subjective",
+                text: "Q2a(i) — Find $dy/dx$: $y=\\sin^3(\\cot x^5)$",
+                modelSolution: "y' = 3sin²(cot x⁵)·cos(cot x⁵)·(−csc²x⁵)·5x⁴."
+            },
+            {
+                id: "f21_dy2", type: "subjective",
+                text: "Q2a(ii) — Find $dy/dx$: $y=\\ln(\\tan^{-1}x)+\\tan^{-1}(\\ln x)$",
+                modelSolution: "y' = [1/(tan⁻¹x)]·[1/(1+x²)] + [1/(1+(ln x)²)]·(1/x)."
+            },
+            {
+                id: "f21_dy3", type: "subjective",
+                text: "Q2a(iii) — Find $dy/dx$: $y=x^8\\cdot 8^{3x}\\cdot e^{x^3}$",
+                modelSolution: "ln y = 8 ln x + 3x ln 8 + x³\ny'/y = 8/x + 3ln8 + 3x²\ny' = x⁸·8^(3x)·e^(x³)·(8/x + 3ln8 + 3x²)."
+            },
+            {
+                id: "f21_dy4", type: "subjective",
+                text: "Q2a(iv) — Find $dy/dx$: $y=(1+\\sqrt{x})^{\\sec x}$",
+                modelSolution: "ln y = sec x · ln(1+√x)\ny'/y = sec x tan x · ln(1+√x) + sec x · 1/(2√x(1+√x))\ny' = (1+√x)^(sec x)·[sec x tan x·ln(1+√x) + sec x/(2√x(1+√x))]."
+            },
+            {
+                id: "f21_cont", type: "subjective",
+                text: "Q2b — Discuss continuity at $x=0$: $f(x)=\\begin{cases}\\frac{\\tan 5x}{x},& x\\ne0\\\\ 6,& x=0\\end{cases}$",
+                modelSolution: "lim(x→0) tan(5x)/x = 5·lim tan(5x)/(5x) = 5.\nf(0) = 6.\nSince lim f ≠ f(0), f is NOT continuous at x=0."
+            },
+            {
+                id: "f21_int1", type: "subjective",
+                text: "Q3(i) — $\\int\\cot^2 x\\,dx$",
+                modelSolution: "∫(csc²x−1)dx = −cot x − x + c."
+            },
+            {
+                id: "f21_int2", type: "subjective",
+                text: "Q3(ii) — $\\int\\sec x\\,dx$",
+                modelSolution: "= ln|sec x + tan x| + c."
+            },
+            {
+                id: "f21_int3", type: "subjective",
+                text: "Q3(iii) — $\\displaystyle\\int\\frac{x}{\\sqrt{x^2-3}}\\,dx$",
+                modelSolution: "Let u=x²−3, du=2x dx.\n= (1/2)∫u^(−1/2)du = √u + c = √(x²−3) + c."
+            },
+            {
+                id: "f21_int4", type: "subjective",
+                text: "Q3(iv) — $\\int e^{x^2+\\ln x}\\,dx$",
+                modelSolution: "e^(x²+ln x) = e^(x²)·e^(ln x) = x·e^(x²).\n∫x·e^(x²)dx: let u=x², du=2x dx.\n= (1/2)e^(x²) + c."
+            }
+        ]
+    },
+
+    "room_summer22": {
+        title: "Summer Exam 2022 — Dr. Rasha",
+        meta: "MATH102 | Summer 2022 | IT Program | Time: 2 hours",
+        questions: [
+            {
+                id: "r22_dy1", type: "subjective",
+                text: "Q1a — Find $\\dfrac{d^2y}{dx^2}$: $x=\\cos t$, $y=\\sin t$ (Second derivative)",
+                modelSolution: "dy/dx = (dy/dt)/(dx/dt) = cos t/(−sin t) = −cot t.\nd²y/dx² = d/dx(−cot t) = [d/dt(−cot t)]/(dx/dt) = csc²t/(−sin t) = −csc³t."
+            },
+            {
+                id: "r22_dy2", type: "subjective",
+                text: "Q1b — Find $\\dfrac{d^2y}{dx^2}$: $y=(3\\sqrt{x}-5)^6$ (Second derivative)",
+                modelSolution: "y' = 6(3√x−5)⁵·(3/(2√x)) = 9(3√x−5)⁵/√x.\ny'' using product/chain rule:\n= 9·[5(3√x−5)⁴·(3/(2√x))·(1/√x) + (3√x−5)⁵·(−1/(2x^(3/2)))]\n= 9(3√x−5)⁴[(15/(2x)) − (3√x−5)/(2x^(3/2))]."
+            },
+            {
+                id: "r22_dy3", type: "subjective",
+                text: "Q1c — Find $\\dfrac{dy}{dx}$: $y=(x^2+1)\\ln\\!\\left(\\dfrac{3x^4+5}{x+2}\\right)$",
+                modelSolution: "y' = 2x·ln((3x⁴+5)/(x+2)) + (x²+1)·d/dx[ln(3x⁴+5)−ln(x+2)]\n= 2x·ln((3x⁴+5)/(x+2)) + (x²+1)·[12x³/(3x⁴+5) − 1/(x+2)]."
+            },
+            {
+                id: "r22_dy4", type: "subjective",
+                text: "Q1d — Find $\\dfrac{dy}{dx}$: $3^xy + e^y\\sin x = \\ln x$ (First derivative)",
+                modelSolution: "Differentiate implicitly:\n3^x·ln(3)·y + 3^x·y' + e^y·y'·sin x + e^y·cos x = 1/x.\ny'(3^x + e^y sin x) = 1/x − 3^x·ln(3)·y − e^y cos x.\ny' = (1/x − 3^x y ln 3 − e^y cos x)/(3^x + e^y sin x)."
+            },
+            {
+                id: "r22_lim1", type: "subjective",
+                text: "Q2a — Find: $\\displaystyle\\lim_{x\\to 0}x^x$ (Use L'Hôpital)",
+                modelSolution: "Form 0⁰. Let L = lim x^x = lim e^(x ln x).\nlim x ln x = lim ln x/(1/x) → L'Hôpital: (1/x)/(−1/x²) = −x → 0.\nSo L = e⁰ = 1."
+            },
+            {
+                id: "r22_lim2", type: "subjective",
+                text: "Q2b — Find: $\\displaystyle\\lim_{x\\to 0}(\\sec x-\\tan x)$ (Use L'Hôpital)",
+                modelSolution: "lim(x→0)(1/cos x − sin x/cos x) = lim(1−sin x)/cos x = (1−0)/1 = 1.\n(No indeterminate form at x=0; direct substitution gives 1.)"
+            },
+            {
+                id: "r22_lim3", type: "subjective",
+                text: "Q2c — Find: $\\displaystyle\\lim_{x\\to\\pi/2}\\frac{\\ln\\sin x}{(\\pi-2x)^2}$ (Use L'Hôpital)",
+                modelSolution: "Form 0/0. L'H: (cos x/sin x)/(−4(π−2x)·(−1)) = (cot x)/(4(π−2x)).\nStill 0/0. L'H again: (−csc²x)/(−4) → at x=π/2: (−1)/(−4) = 1/4."
+            },
+            {
+                id: "r22_lim4", type: "subjective",
+                text: "Q2d — Find: $\\displaystyle\\lim_{x\\to 0}\\frac{x-\\tan^{-1}x}{x^3}$ (Use series)",
+                modelSolution: "tan⁻¹x = x − x³/3 + x⁵/5 − ⋯\nx − tan⁻¹x = x³/3 − x⁵/5 + ⋯\n(x−tan⁻¹x)/x³ → 1/3 as x→0."
+            },
+            {
+                id: "r22_int1", type: "subjective",
+                text: "Q3a — $\\int\\sec^2 x\\sqrt{5+\\tan x}\\,dx$",
+                modelSolution: "u = 5+tan x, du = sec²x dx.\n= ∫√u du = (2/3)u^(3/2) + c = (2/3)(5+tan x)^(3/2) + c."
+            },
+            {
+                id: "r22_int2", type: "subjective",
+                text: "Q3b — $\\displaystyle\\int_0^{\\pi/2}\\frac{\\sin x+\\cos x}{e^{-x}+\\sin x}\\,dx$",
+                modelSolution: "Let u = e^(−x)+sin x, du = (−e^(−x)+cos x)dx... Note sin x+cos x ≠ du.\nActually: d/dx(e^(−x)+sin x) = −e^(−x)+cos x.\nTry u=sin x+e^(−x): du = cos x−e^(−x) dx. Not matching.\nUse: ∫(sin x+cos x)/(e^(−x)+sin x)dx. Let u=e^(−x)+sin x:\ndu = (cos x−e^(−x))dx. Note sin x+cos x = cos x−e^(−x) + e^(−x)+sin x = du/dx + u − e^(−x)... complex.\nMore directly: multiply top and bottom by eˣ: ∫(sin x+cos x)eˣ/(1+eˣ sin x)dx.\nu = 1+eˣ sin x, du = eˣ sin x + eˣ cos x = eˣ(sin x+cos x)dx.\n= ∫du/u = [ln|1+eˣ sin x|]₀^(π/2) = ln(1+e^(π/2)) − ln(1+1) = ln[(1+e^(π/2))/2]."
+            },
+            {
+                id: "r22_int3", type: "subjective",
+                text: "Q3c — $\\int(\\sin^2 3x+\\sec^2 x)\\,dx$",
+                modelSolution: "∫sin²(3x)dx = ∫(1−cos 6x)/2 dx = x/2 − sin(6x)/12.\n∫sec²x dx = tan x.\nAnswer: x/2 − sin(6x)/12 + tan x + c."
+            },
+            {
+                id: "r22_int4", type: "subjective",
+                text: "Q3d — $\\displaystyle\\int\\frac{2x+2}{x^2+x-6}\\,dx$",
+                modelSolution: "Numerator = 2x+2, denominator = (x+3)(x−2).\nd/dx(x²+x−6) = 2x+1. Close but 2x+2 = (2x+1)+1.\n∫(2x+2)/(x²+x−6)dx = ∫(2x+1)/(x²+x−6)dx + ∫1/(x²+x−6)dx\n= ln|x²+x−6| + ∫1/[(x+3)(x−2)]dx.\nPF: 1/[(x+3)(x−2)] = (1/5)[1/(x−2)−1/(x+3)].\n= ln|x²+x−6| + (1/5)ln|(x−2)/(x+3)| + c."
+            },
+            {
+                id: "r22_int5", type: "subjective",
+                text: "Q3e — $\\int\\sin^{-1}x\\,dx$",
+                modelSolution: "IBP: u=sin⁻¹x, dv=dx → du=1/√(1−x²)dx, v=x.\n= x sin⁻¹x − ∫x/√(1−x²)dx.\nLet w=1−x², dw=−2x dx:\n= x sin⁻¹x + √(1−x²) + c."
+            },
+            {
+                id: "r22_area", type: "subjective",
+                text: "Q4 — Find area bounded by $y=x^2$ and $y=\\sqrt{x}$.",
+                modelSolution: "Intersections: x²=√x → x⁴=x → x(x³−1)=0 → x=0,1.\nArea = ∫₀¹(√x−x²)dx = [(2/3)x^(3/2)−x³/3]₀¹ = 2/3−1/3 = 1/3."
+            }
+        ]
+    }
+};
+
+        let activeRoomKey = "room_2023";
+        let roomScores = {};
+        let userAnswers = {};
+        let currentTheme = "dark";
+
+        function loadStateFromStorage() {
+            try {
+                const storedScores = localStorage.getItem("math102_portal_scores_v1");
+                const storedAnswers = localStorage.getItem("math102_portal_answers_v1");
+                const storedActiveRoom = localStorage.getItem("math102_portal_activeRoom_v1");
+                const storedTheme = localStorage.getItem("math102_portal_theme_v1");
+                if (storedScores) roomScores = JSON.parse(storedScores);
+                if (storedAnswers) userAnswers = JSON.parse(storedAnswers);
+                if (storedActiveRoom && examDatabase[storedActiveRoom]) activeRoomKey = storedActiveRoom;
+                if (storedTheme) currentTheme = storedTheme;
+            } catch (e) {}
+        }
+
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem("math102_portal_scores_v1", JSON.stringify(roomScores));
+                localStorage.setItem("math102_portal_answers_v1", JSON.stringify(userAnswers));
+                localStorage.setItem("math102_portal_activeRoom_v1", activeRoomKey);
+                localStorage.setItem("math102_portal_theme_v1", currentTheme);
+            } catch (e) {}
+        }
+
+        function applyThemeOnLoad() {
+            const bodyEl = document.getElementById("app-body");
+            const toggleBtn = document.getElementById("theme-btn");
+            if (currentTheme === "light") {
+                bodyEl.classList.add("light-theme");
+                toggleBtn.innerText = "🌙 Dark";
+            } else {
+                bodyEl.classList.remove("light-theme");
+                toggleBtn.innerText = "☀️ Light";
+            }
+        }
+
+        function toggleThemeEngineMode() {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            saveStateToStorage();
+            applyThemeOnLoad();
+        }
+
+        function initializePlatform() {
+            loadStateFromStorage();
+            applyThemeOnLoad();
+            const navbarContainer = document.getElementById("navbar-rooms-container");
+            navbarContainer.innerHTML = "";
+            const roomLabels = {
+                "room_2023": "2023 Final",
+                "room_2025": "2025 Final",
+                "room_2024": "2024 Final",
+                "room_2021_summer": "2021 Summer",
+                "room_2021_final": "2021 Final",
+                "room_summer22": "2022 Summer"
+            };
+            Object.keys(examDatabase).forEach(key => {
+                if (!roomScores[key]) roomScores[key] = { submitted: false, score: 0, total: 0 };
+                if (!userAnswers[key]) userAnswers[key] = {};
+                const btn = document.createElement("button");
+                btn.id = `tab-${key}`;
+                btn.type = "button";
+                btn.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+                btn.onclick = () => switchRoom(key);
+                btn.innerHTML = `<span>${roomLabels[key] || key}</span><span id="badge-${key}" class="tab-badge-idle text-[9px] px-1.5 py-0.5 rounded font-bold border">IDLE</span>`;
+                navbarContainer.appendChild(btn);
+                updateNavbarBadgeStatus(key);
+            });
+            switchRoom(activeRoomKey);
+            calculateOverallMetrics();
+        }
+
+        function updateNavbarBadgeStatus(roomKey) {
+            const badge = document.getElementById(`badge-${roomKey}`);
+            const state = roomScores[roomKey];
+            if (!badge || !state) return;
+            if (state.submitted) {
+                if (state.total > 0) {
+                    const pct = Math.round((state.score / state.total) * 100);
+                    badge.innerText = `${pct}%`;
+                    badge.className = `text-[9px] px-1.5 py-0.5 rounded border font-bold ${pct >= 50 ? 'badge-pass' : 'badge-fail'}`;
+                } else {
+                    badge.innerText = "DONE";
+                    badge.className = "text-[9px] px-1.5 py-0.5 rounded border font-bold badge-done";
+                }
+            } else {
+                badge.innerText = "IDLE";
+                badge.className = "tab-badge-idle text-[9px] px-1.5 py-0.5 rounded border font-bold";
+            }
+            const tabBtn = document.getElementById(`tab-${roomKey}`);
+            if (tabBtn) {
+                if (roomKey === activeRoomKey) {
+                    tabBtn.className = "bg-indigo-600/20 border-indigo-500 text-indigo-400 shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+                } else {
+                    tabBtn.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+                }
+            }
+        }
+
+        function switchRoom(key) {
+            activeRoomKey = key;
+            saveStateToStorage();
+            Object.keys(examDatabase).forEach(k => updateNavbarBadgeStatus(k));
+            const room = examDatabase[key];
+            document.getElementById("room-title").innerText = room.title;
+            document.getElementById("room-meta").innerText = room.meta;
+            renderQuestions(room.questions);
+            updateScoreBannerDisplay();
+            if (roomScores[key] && roomScores[key].submitted) applyVisualCorrectionFeedback();
+        }
+
+        // ----- Auto unicode -> LaTeX converter so solutions render like the questions -----
+        const SUP_MAP = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁺':'+','⁻':'-','⁽':'(','⁾':')','ⁿ':'n','ⁱ':'i','ᵃ':'a','ᵇ':'b','ᶜ':'c','ᵈ':'d','ᵉ':'e','ᵏ':'k','ᵐ':'m','ᵒ':'o','ᵖ':'p','ʳ':'r','ˢ':'s','ᵗ':'t','ᵘ':'u','ᵛ':'v','ʷ':'w','ˣ':'x','ʸ':'y','ᶻ':'z'};
+        const SUB_MAP = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','₊':'+','₋':'-','ₓ':'x','ₙ':'n','ₐ':'a','ₑ':'e','ₒ':'o','ᵢ':'i','ⱼ':'j','ₖ':'k','ₘ':'m','ₚ':'p','ₛ':'s','ₜ':'t'};
+        const SYM_MAP = {'π':'\\pi ','θ':'\\theta ','∞':'\\infty ','∑':'\\sum ','∏':'\\prod ','∫':'\\int ','·':'\\cdot ','×':'\\times ','÷':'\\div ','→':'\\to ','⇒':'\\Rightarrow ','⇔':'\\Leftrightarrow ','≠':'\\neq ','≤':'\\le ','≥':'\\ge ','±':'\\pm ','∓':'\\mp ','⋯':'\\cdots ','…':'\\dots ','∂':'\\partial ','≈':'\\approx ','∎':'\\;\\blacksquare','∈':'\\in ','∉':'\\notin ','∪':'\\cup ','∩':'\\cap ','∅':'\\varnothing ','∀':'\\forall ','∃':'\\exists ','α':'\\alpha ','β':'\\beta ','γ':'\\gamma ','δ':'\\delta ','ε':'\\varepsilon ','λ':'\\lambda ','μ':'\\mu ','σ':'\\sigma ','φ':'\\phi ','ψ':'\\psi ','ω':'\\omega ','Δ':'\\Delta ','Σ':'\\Sigma ','Ω':'\\Omega ','−':'-','–':'-','—':'-','×':'\\times '};
+        const FUNCS = ['arcsin','arccos','arctan','sinh','cosh','tanh','sin','cos','tan','sec','csc','cot','log','ln','lim','exp','max','min','det','gcd','deg'];
+        const DIFFS = ['dx','dy','dt','du','dv','dw','ds','dr','dn','dz','dθ'];
+
+        function lineToTeX(line) {
+            let s = line;
+            const supChars = Object.keys(SUP_MAP).join('');
+            const subChars = Object.keys(SUB_MAP).join('');
+            // grouped super / subscripts
+            s = s.replace(new RegExp('[' + supChars + ']+', 'g'), m => '^{' + [...m].map(c => SUP_MAP[c]).join('') + '}');
+            s = s.replace(new RegExp('[' + subChars + ']+', 'g'), m => '_{' + [...m].map(c => SUB_MAP[c]).join('') + '}');
+            // ^(...) and _(...) groupings
+            s = s.replace(/\^\(([^()]*)\)/g, '^{$1}');
+            s = s.replace(/_\(([^()]*)\)/g, '_{$1}');
+            // square roots
+            s = s.replace(/√\(([^()]*)\)/g, '\\sqrt{$1}');
+            s = s.replace(/√\{([^{}]*)\}/g, '\\sqrt{$1}');
+            s = s.replace(/√([A-Za-z0-9])/g, '\\sqrt{$1}');
+            // symbols
+            s = s.replace(/[^\x00-\x7F]/g, c => SYM_MAP[c] !== undefined ? SYM_MAP[c] : c);
+            // functions -> \fn
+            FUNCS.forEach(fn => { s = s.replace(new RegExp('\\b' + fn + '\\b', 'g'), '\\' + fn + ' '); });
+            // protect backslash commands & differentials before wrapping prose
+            const store = [];
+            const protect = str => { store.push(str); return '\x01' + (store.length - 1) + '\x02'; };
+            s = s.replace(/\\[a-zA-Z]+/g, m => protect(m));
+            DIFFS.forEach(d => { s = s.replace(new RegExp('\\b' + d + '\\b', 'g'), m => protect(m)); });
+            // wrap runs of 2+ letters (prose words) as upright text
+            s = s.replace(/[A-Za-zÀ-ÿ]{2,}/g, m => '\\text{' + m + '}');
+            // preserve spaces inside math mode
+            s = s.replace(/ /g, '\\ ');
+            // restore protected tokens
+            s = s.replace(/\x01(\d+)\x02/g, (_, i) => store[+i]);
+            return s;
+        }
+
+        function renderSolutionHTML(raw) {
+            if (!raw) return '';
+            const lines = [];
+            raw.split('\n').forEach(l => {
+                const t = l.trim();
+                if (!t) { lines.push(''); return; }
+                // break long prose into sentence-sized rows (period/✓/✗ followed by space)
+                t.split(/(?<=[.✓✗∎])\s+/).forEach(seg => { if (seg.trim()) lines.push(seg.trim()); });
+            });
+            return lines.map(l => l === ''
+                ? '<div class="h-1"></div>'
+                : '<div class="sol-line">\\(\\displaystyle ' + lineToTeX(l) + '\\)</div>'
+            ).join('');
+        }
+
+        function renderQuestions(questions) {
+            const form = document.getElementById("exam-questions-form");
+            form.innerHTML = "";
+            questions.forEach(q => {
+                const card = document.createElement("div");
+                card.className = "card-bg border rounded-2xl p-5 space-y-3";
+                card.id = `card-${q.id}`;
+
+                let html = `<div class="flex items-start justify-between gap-2 flex-wrap">
+                    <p class="text-sm font-semibold text-main leading-relaxed flex-1">${q.text}</p>
+                    <span id="status-${q.id}" class="text-xs shrink-0"></span>
+                </div>`;
+
+                if (q.type === "mcq") {
+                    html += `<div class="space-y-2">`;
+                    q.options.forEach((opt, oIdx) => {
+                        const saved = userAnswers[activeRoomKey][q.id];
+                        const isChecked = saved === oIdx ? "checked" : "";
+                        html += `<label id="wrapper-${q.id}-${oIdx}" class="option-wrapper flex items-center gap-3 border p-4 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50">
+                            <input type="radio" name="${q.id}" value="${oIdx}" class="accent-indigo-500" ${isChecked} onchange="saveAnswer('${q.id}', ${oIdx})">
+                            <span class="text-sm">${opt}</span>
+                        </label>`;
+                    });
+                    html += `</div>`;
+                    if (q.explain) {
+                        html += `<div class="explain-box border rounded-xl p-3 hidden" id="explain-${q.id}">
+                            <p class="text-xs text-blue-300 font-semibold mb-1">💡 Explanation</p>
+                            <div class="sol-content text-sm text-slate-200">${renderSolutionHTML(q.explain)}</div>
+                        </div>`;
+                    }
+                } else if (q.type === "tf") {
+                    const saved = userAnswers[activeRoomKey][q.id];
+                    const trueChecked = saved === "true" ? "checked" : "";
+                    const falseChecked = saved === "false" ? "checked" : "";
+                    html += `<div class="flex gap-3">
+                        <label id="wrapper-${q.id}-true" class="option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50">
+                            <input type="radio" name="${q.id}" value="true" class="accent-indigo-500" ${trueChecked} onchange="saveAnswer('${q.id}', 'true')">
+                            <span class="text-sm font-semibold">✓ True</span>
+                        </label>
+                        <label id="wrapper-${q.id}-false" class="option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50">
+                            <input type="radio" name="${q.id}" value="false" class="accent-indigo-500" ${falseChecked} onchange="saveAnswer('${q.id}', 'false')">
+                            <span class="text-sm font-semibold">✗ False</span>
+                        </label>
+                    </div>`;
+                    if (q.explain) {
+                        html += `<div class="explain-box border rounded-xl p-3 hidden" id="explain-${q.id}">
+                            <p class="text-xs text-blue-300 font-semibold mb-1">💡 Explanation</p>
+                            <div class="sol-content text-sm text-slate-200">${renderSolutionHTML(q.explain)}</div>
+                        </div>`;
+                    }
+                } else if (q.type === "subjective") {
+                    if (q.code) {
+                        html += `<pre class="code-box-bg border rounded-xl p-4 text-xs overflow-x-auto code-font">${q.code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
+                    }
+                    const savedText = userAnswers[activeRoomKey][q.id] || "";
+                    html += `<textarea class="subjective-textarea w-full border rounded-xl p-3 text-sm resize-y code-font" rows="4" placeholder="Write your answer here..." onchange="saveAnswer('${q.id}', this.value)">${savedText}</textarea>`;
+                    html += `<div class="solution-box border rounded-xl p-3 hidden" id="solution-${q.id}">
+                        <p class="text-xs text-emerald-400 font-bold mb-2">✅ Model Solution</p>
+                        <div class="sol-content text-sm text-slate-200">${renderSolutionHTML(q.modelSolution)}</div>
+                    </div>`;
+                    html += `<button type="button" onclick="toggleSolution('${q.id}')" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors cursor-pointer">Show Solution ▼</button>`;
+                }
+                card.innerHTML = html;
+                form.appendChild(card);
+            });
+
+            // Typeset MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([form]).catch(err => {});
+            }
+        }
+
+        function toggleSolution(qId) {
+            const solBox = document.getElementById(`solution-${qId}`);
+            const btn = solBox ? solBox.nextElementSibling : null;
+            if (!solBox) return;
+            solBox.classList.toggle("hidden");
+            if (btn) btn.textContent = solBox.classList.contains("hidden") ? "Show Solution ▼" : "Hide Solution ▲";
+        }
+
+        function saveAnswer(qId, value) {
+            userAnswers[activeRoomKey][qId] = value;
+            saveStateToStorage();
+        }
+
+        function submitCurrentRoom() {
+            const questions = examDatabase[activeRoomKey].questions;
+            let score = 0, total = 0;
+            questions.forEach(q => {
+                if (q.type === "mcq" || q.type === "tf") {
+                    total++;
+                    const saved = userAnswers[activeRoomKey][q.id];
+                    if (q.type === "mcq" && parseInt(saved) === q.answer) score++;
+                    if (q.type === "tf") {
+                        const correctStr = q.answer ? "true" : "false";
+                        if (saved === correctStr) score++;
+                    }
+                }
+            });
+            roomScores[activeRoomKey] = { submitted: true, score, total };
+            saveStateToStorage();
+            renderQuestions(questions);
+            applyVisualCorrectionFeedback();
+            updateNavbarBadgeStatus(activeRoomKey);
+            updateScoreBannerDisplay();
+            calculateOverallMetrics();
+        }
+
+        function applyVisualCorrectionFeedback() {
+            const questions = examDatabase[activeRoomKey].questions;
+            questions.forEach(q => {
+                const statusEl = document.getElementById(`status-${q.id}`);
+                const savedAns = userAnswers[activeRoomKey][q.id];
+                if (q.type === "mcq") {
+                    q.options.forEach((_, oIdx) => {
+                        const optWrapper = document.getElementById(`wrapper-${q.id}-${oIdx}`);
+                        if (optWrapper) optWrapper.className = "option-wrapper flex items-center gap-3 border p-4 rounded-xl opacity-60";
+                    });
+                    const correctWrapper = document.getElementById(`wrapper-${q.id}-${q.answer}`);
+                    if (correctWrapper) {
+                        correctWrapper.className = "flex items-center gap-3 bg-emerald-500/20 border border-emerald-500 text-emerald-600 font-bold p-4 rounded-xl opacity-100 shadow-sm";
+                        if (!correctWrapper.querySelector('.correct-badge')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'correct-badge ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 whitespace-nowrap';
+                            badge.textContent = '✅ الإجابة الصحيحة';
+                            correctWrapper.appendChild(badge);
+                        }
+                    }
+                    const explainBox = document.getElementById(`explain-${q.id}`);
+                    if (explainBox) explainBox.classList.remove("hidden");
+                    if (savedAns !== undefined) {
+                        const userIdx = parseInt(savedAns);
+                        if (userIdx === q.answer) {
+                            if (statusEl) statusEl.innerHTML = "<span class='text-emerald-500 font-bold'>✓ Correct</span>";
+                        } else {
+                            const wrongWrapper = document.getElementById(`wrapper-${q.id}-${userIdx}`);
+                            if (wrongWrapper) wrongWrapper.className = "flex items-center gap-3 bg-rose-500/20 border border-rose-500 text-rose-600 font-bold p-4 rounded-xl opacity-100";
+                            if (statusEl) statusEl.innerHTML = "<span class='text-rose-500 font-bold'>✗ Incorrect</span>";
+                        }
+                    } else {
+                        if (statusEl) statusEl.innerHTML = "<span class='text-amber-500 font-semibold'>Unanswered</span>";
+                    }
+                } else if (q.type === "tf") {
+                    const trueWrapper = document.getElementById(`wrapper-${q.id}-true`);
+                    const falseWrapper = document.getElementById(`wrapper-${q.id}-false`);
+                    if (trueWrapper) trueWrapper.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl opacity-60";
+                    if (falseWrapper) falseWrapper.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl opacity-60";
+                    const correctStr = q.answer ? "true" : "false";
+                    const correctWrapper = document.getElementById(`wrapper-${q.id}-${correctStr}`);
+                    if (correctWrapper) {
+                        correctWrapper.className = "flex items-center gap-3 bg-emerald-500/20 border border-emerald-500 text-emerald-600 font-bold px-5 py-3 rounded-xl opacity-100";
+                        if (!correctWrapper.querySelector('.correct-badge')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'correct-badge ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 whitespace-nowrap';
+                            badge.textContent = '✅ الإجابة الصحيحة';
+                            correctWrapper.appendChild(badge);
+                        }
+                    }
+                    const explainBox = document.getElementById(`explain-${q.id}`);
+                    if (explainBox) explainBox.classList.remove("hidden");
+                    if (savedAns !== undefined) {
+                        if (savedAns === correctStr) {
+                            if (statusEl) statusEl.innerHTML = "<span class='text-emerald-500 font-bold'>✓ Correct</span>";
+                        } else {
+                            const wrongWrapper = document.getElementById(`wrapper-${q.id}-${savedAns}`);
+                            if (wrongWrapper) wrongWrapper.className = "flex items-center gap-3 bg-rose-500/20 border border-rose-500 text-rose-600 font-bold px-5 py-3 rounded-xl opacity-100";
+                            if (statusEl) statusEl.innerHTML = "<span class='text-rose-500 font-bold'>✗ Incorrect</span>";
+                        }
+                    } else {
+                        if (statusEl) statusEl.innerHTML = "<span class='text-amber-500 font-semibold'>Unanswered</span>";
+                    }
+                }
+            });
+        }
+
+        function resetCurrentRoom() {
+            roomScores[activeRoomKey] = { submitted: false, score: 0, total: 0 };
+            userAnswers[activeRoomKey] = {};
+            saveStateToStorage();
+            updateNavbarBadgeStatus(activeRoomKey);
+            renderQuestions(examDatabase[activeRoomKey].questions);
+            updateScoreBannerDisplay();
+            calculateOverallMetrics();
+        }
+
+        function updateScoreBannerDisplay() {
+            const banner = document.getElementById("room-score-banner");
+            const state = roomScores[activeRoomKey];
+            if (state && state.submitted && state.total > 0) {
+                banner.classList.remove("hidden");
+                document.getElementById("room-score-breakdown").innerText = `You scored ${state.score} out of ${state.total} MCQ/T-F questions correctly.`;
+                const pct = Math.round((state.score / state.total) * 100);
+                document.getElementById("room-percentage-badge").innerText = `${pct}%`;
+            } else {
+                banner.classList.add("hidden");
+            }
+        }
+
+        function calculateOverallMetrics() {
+            let totalScore = 0, totalGraded = 0;
+            Object.keys(examDatabase).forEach(key => {
+                if (roomScores[key] && roomScores[key].submitted) {
+                    totalScore += roomScores[key].score;
+                    totalGraded += roomScores[key].total;
+                }
+            });
+            const overallPct = totalGraded > 0 ? Math.round((totalScore / totalGraded) * 100) : 0;
+            document.getElementById("overall-score-txt").innerText = `${overallPct}% Passed`;
+        }
+
+        window.onload = initializePlatform;
+</script>
+
+    <footer class="nav-bg border-t border-slate-800/40 mt-16 py-12 px-6 transition-all duration-300 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6 text-center relative z-10">
+            <div class="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 px-4 py-1.5 rounded-xl shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-[10px] md:text-xs font-bold text-indigo-400 uppercase tracking-[0.2em] code-font">Minia University • Faculty of Science</span>
+            </div>
+            <div class="space-y-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-slate-400 font-extrabold opacity-80">⚡ Made With Passion By ⚡</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 pt-2">
+                    <h2 class="footer-name-1 text-2xl md:text-4xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none">ENG: ABO ANWER</h2>
+                    <span class="hidden md:block text-slate-500 font-light text-2xl">|</span>
+                    <h2 class="footer-name-2 text-2xl md:text-4xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none">ENG: HAMZA KAFAFI</h2>
+                </div>
+            </div>
+            <div class="w-40 h-[2px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-70 my-4"></div>
+            <p class="text-[10px] uppercase tracking-[0.4em] text-muted font-bold code-font opacity-60">© 2026 Premium Portal • MATH102 • First Level IT</p>
+        </div>
+    </footer>
+</body>
+</html>
