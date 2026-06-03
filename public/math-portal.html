@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATH102 Premium Portal - Mathematics</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+            svg: { fontCache: 'global' },
+            startup: { typeset: false }
+        };
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif; font-size: 15px; line-height: 1.7; transition: background-color 0.25s ease, color 0.25s ease; }
+        .arabic-text { font-family: 'Cairo', sans-serif; direction: rtl; text-align: right; }
+        .code-font { font-family: 'Fira Code', monospace; font-variant-ligatures: none; font-size: 13.5px; line-height: 1.75; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        body                { background-color: #020617 !important; color: #e2e8f0; }
+        .card-bg            { background-color: #0f172a; border-color: #1e293b; color: #e2e8f0; }
+        .code-box-bg        { background-color: #020617; border-color: #334155; color: #34d399; }
+        .text-main          { color: #f1f5f9; }
+        .text-muted         { color: #94a3b8; }
+        .nav-bg             { background-color: #0f172a; border-color: #1e293b; }
+        .option-wrapper     { background-color: #0a1628; border-color: #1e293b; color: #cbd5e1; }
+        .tab-idle           { background-color: rgba(15,23,42,0.5); border-color: rgba(30,41,59,0.5); color: #94a3b8; }
+        .tab-badge-idle     { background-color: #020617; border-color: #1e293b; color: #64748b; }
+        .badge-pass, .badge-fail, .badge-done, .tab-badge-idle { transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
+
+        body.light-theme                { background-color: #f1f5f9 !important; color: #0f172a; }
+        body.light-theme .card-bg       { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+        body.light-theme .code-box-bg   { background-color: #f8fafc; border-color: #cbd5e1; color: #15803d; }
+        body.light-theme .text-main     { color: #0f172a; }
+        body.light-theme .text-muted    { color: #475569; }
+        body.light-theme .nav-bg        { background-color: #ffffff; border-color: #e2e8f0; }
+        body.light-theme .option-wrapper{ background-color: #ffffff; border-color: #e2e8f0; color: #1e293b; }
+        body.light-theme .tab-idle      { background-color: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+        body.light-theme .tab-badge-idle{ background-color: #e2e8f0; border-color: #94a3b8; color: #475569; }
+        body.light-theme #theme-btn     { background-color: #f1f5f9; border-color: #cbd5e1; color: #4f46e5; }
+        body.light-theme #overall-score-container { background-color: #f0fdf4; border-color: #bbf7d0; }
+        body.light-theme .btn-reset     { border-color: #cbd5e1; color: #475569; }
+        body.light-theme .btn-reset:hover { background-color: #f1f5f9; }
+        .footer-name-1 { background: linear-gradient(to right, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .footer-name-2 { background: linear-gradient(to right, #22d3ee, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .explain-box { background-color: #0d1f3c; border-color: #1e3a5f; transition: background-color 0.25s ease, border-color 0.25s ease; }
+        body.light-theme .explain-box { background-color: #eff6ff; border-color: #bfdbfe; }
+        .sol-content { display: flex; flex-direction: column; gap: 6px; line-height: 1.7; }
+        .sol-line { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 1px 0; }
+        .sol-line mjx-container { margin: 0 !important; }
+        .solution-box { background-color: rgba(2,6,23,0.3); border-color: #334155; transition: background-color 0.25s ease, border-color 0.25s ease; }
+        .subjective-textarea { background-color: rgba(2,6,23,0.2); border-color: rgba(51,65,85,0.8); color: #34d399; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
+        body.light-theme .solution-box { background-color: #f8fafc; border-color: #e2e8f0; }
+        body.light-theme .subjective-textarea { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+        body.light-theme .subjective-textarea::placeholder { color: #94a3b8; }
+        .badge-pass   { background-color: rgba(6,78,59,0.4);  color: #34d399; border-color: rgba(6,78,59,0.3); }
+        .badge-fail   { background-color: rgba(136,19,55,0.4); color: #fb7185; border-color: rgba(136,19,55,0.3); }
+        .badge-done   { background-color: rgba(49,46,129,0.4); color: #a5b4fc; border-color: rgba(49,46,129,0.3); }
+        body.light-theme .badge-pass { background-color: #dcfce7; color: #15803d; border-color: #86efac; }
+        body.light-theme .badge-fail { background-color: #ffe4e6; color: #be123c; border-color: #fda4af; }
+        body.light-theme .badge-done { background-color: #ede9fe; color: #6d28d9; border-color: #c4b5fd; }
+        body.light-theme footer { background-color: #ffffff; border-color: #e2e8f0; }
+        
+        .translate-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+        .translate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        .translated-content {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        body.light-theme .translated-content {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .detailed-explain {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        body.light-theme .detailed-explain {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+        }
+    </style>
+</head>
+<body id="app-body" class="min-h-screen flex flex-col selection:bg-indigo-500/30">
+    <header class="nav-bg border-b p-4 flex flex-col gap-3 shadow-sm">
+        <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-gradient-to-tr from-indigo-600 to-violet-600 p-2 rounded-xl text-white font-bold text-xs shadow-md">∫</div>
+                <div>
+                    <h1 class="text-base font-bold bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">MATH102 Portal</h1>
+                    <p class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Minia University - Faculty of Science</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="toggleThemeEngineMode()" class="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900/40 text-xs font-bold cursor-pointer transition-colors text-main" id="theme-btn">Light</button>
+                <div id="overall-score-container" class="bg-slate-900/40 border border-slate-800/60 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-emerald-500"><span id="overall-score-txt">0% Passed</span></div>
+            </div>
+        </div>
+        <div class="w-full overflow-x-auto no-scrollbar flex items-center gap-1.5 pt-1" id="navbar-rooms-container"></div>
+    </header>
+    <div class="flex flex-1 justify-center w-full max-w-4xl mx-auto p-4 md:p-6">
+        <main class="w-full flex flex-col">
+            <div class="card-bg border rounded-2xl p-4 mb-5 space-y-1 shadow-sm">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Active Exam Module</span>
+                </div>
+                <h2 id="room-title" class="text-base font-bold text-main tracking-tight">Loading...</h2>
+                <p id="room-meta" class="text-xs text-muted font-medium"></p>
+            </div>
+            <div id="room-score-banner" class="hidden bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 mb-5 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="text-emerald-500 text-xs font-bold">PERFORMANCE EVALUATED:</div>
+                    <div class="text-xs text-main font-semibold" id="room-score-breakdown">You scored 0 items correctly.</div>
+                </div>
+                <div id="room-percentage-badge" class="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">0%</div>
+            </div>
+            <form id="exam-questions-form" onsubmit="event.preventDefault();" class="space-y-4"></form>
+            <div class="card-bg border rounded-2xl p-4 mt-6 flex items-center justify-end gap-2 shadow-sm">
+                <button type="button" onclick="resetCurrentRoom()" class="btn-reset border border-slate-700/80 hover:bg-slate-800/40 text-muted font-medium text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer">Reset Answers</button>
+                <button type="button" onclick="submitCurrentRoom()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer">Submit Room Answers</button>
+            </div>
+        </main>
+    </div>
+
+<script>
+// ===================== TRANSLATIONS DATABASE =====================
+const translations = {
+    // 2023 Exam Translations
+    "23_q1": {
+        text: "س1.1 - أوجد قيمة c التي تجعل الدالة متصلة",
+        options: ["أ) 4", "ب) 6", "ج) 1", "د) لا شيء مما سبق"],
+        explain: `الشرح التفصيلي:
+
+لكي تكون الدالة متصلة عند x=1، يجب أن يتساوى النهايتين من اليمين واليسار.
+
+الخطوة 1: حساب النهاية من اليسار (x → 1⁻)
+عندما x ≤ 1، الدالة هي f(x) = x² - 3
+lim(x→1⁻) f(x) = (1)² - 3 = 1 - 3 = -2
+
+الخطوة 2: حساب النهاية من اليمين (x → 1⁺)
+عندما x > 1، الدالة هي f(x) = 2x - c
+lim(x→1⁺) f(x) = 2(1) - c = 2 - c
+
+الخطوة 3: مساواة النهايتين للاتصال
+2 - c = -2
+-c = -2 - 2 = -4
+c = 4
+
+إذن الإجابة الصحيحة هي c = 4`
+    },
+    "23_q2": {
+        text: "س1.2 - اشتق الدالة h(x) = csc√x",
+        options: ["أ) -cot²√x", "ب) (-csc√x cot√x)/(2√x)", "ج) -csc(1/2√x) cot(1/2√x)", "د) لا شيء مما سبق"],
+        explain: `الشرح التفصيلي:
+
+نستخدم قاعدة السلسلة (Chain Rule) للاشتقاق.
+
+الخطوة 1: تذكر أن d/dx[csc(u)] = -csc(u)·cot(u)·u'
+
+الخطوة 2: هنا u = √x
+du/dx = 1/(2√x)
+
+الخطوة 3: تطبيق قاعدة السلسلة
+h'(x) = -csc(√x)·cot(√x) × d/dx(√x)
+h'(x) = -csc(√x)·cot(√x) × 1/(2√x)
+h'(x) = -csc(√x)·cot(√x)/(2√x)
+
+إذن الإجابة الصحيحة هي الخيار (ب)`
+    },
+    "23_q3": {
+        text: "س1.3 - إذا كان 2ln(x) - 2 = 0، فإن x =",
+        options: ["أ) 0", "ب) e", "ج) 1", "د) لا شيء مما سبق"],
+        explain: `الشرح التفصيلي:
+
+نحل المعادلة خطوة بخطوة:
+
+الخطوة 1: البداية بالمعادلة
+2 ln(x) - 2 = 0
+
+الخطوة 2: نقل -2 للطرف الآخر
+2 ln(x) = 2
+
+الخطوة 3: القسمة على 2
+ln(x) = 1
+
+الخطوة 4: تحويل من الصيغة اللوغاريتمية للأسية
+بما أن ln(x) = 1
+وبما أن ln هو اللوغاريتم الطبيعي (الأساس e)
+إذن: x = e¹ = e
+
+الإجابة الصحيحة هي x = e`
+    },
+    "23_q4": {
+        text: "س1.4 - أوجد dy/dx للمعادلة 5x² - 2xy + 7y² = 0",
+        options: ["أ) 10x - 2y + 12", "ب) (y-5x)/(7-y)", "ج) (y-5x)/(7y-x)", "د) لا شيء مما سبق"],
+        explain: `الشرح التفصيلي:
+
+نستخدم الاشتقاق الضمني (Implicit Differentiation)
+
+الخطوة 1: اشتقاق كل حد بالنسبة لـ x
+d/dx[5x²] = 10x
+d/dx[-2xy] = -2y - 2x·(dy/dx)  (قاعدة الضرب)
+d/dx[7y²] = 14y·(dy/dx)  (قاعدة السلسلة)
+d/dx[0] = 0
+
+الخطوة 2: تجميع المعادلة
+10x - 2y - 2x·y' + 14y·y' = 0
+
+الخطوة 3: تجميع الحدود التي تحتوي على y'
+y'(14y - 2x) = 2y - 10x
+
+الخطوة 4: حل لإيجاد y'
+y' = (2y - 10x)/(14y - 2x)
+y' = 2(y - 5x)/2(7y - x)
+y' = (y - 5x)/(7y - x)
+
+الإجابة الصحيحة هي الخيار (ج)`
+    },
+    "23_q5": {
+        text: "س1.5 - إذا كان y = cot(t) و x = tan(t)، فإن dy/dx =",
+        options: ["أ) -cot²t", "ب) cot²t", "ج) -tan²t", "د) tan²t"],
+        explain: `الشرح التفصيلي:
+
+نستخدم قاعدة المشتقات البارامترية:
+dy/dx = (dy/dt)/(dx/dt)
+
+الخطوة 1: إيجاد dy/dt
+y = cot(t)
+dy/dt = -csc²(t)
+
+الخطوة 2: إيجاد dx/dt
+x = tan(t)
+dx/dt = sec²(t)
+
+الخطوة 3: حساب dy/dx
+dy/dx = (-csc²t)/(sec²t)
+= -(1/sin²t)/(1/cos²t)
+= -cos²t/sin²t
+= -cot²t
+
+الإجابة الصحيحة هي -cot²t`
+    },
+    "23_tf1": {
+        text: "س2.1 - إذا كان y = tan⁻¹(x) + tan⁻¹(1/x)، فإن y' = 0",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: نلاحظ أن tan⁻¹(x) + tan⁻¹(1/x) = π/2 لـ x > 0
+
+هذه هوية مثلثية معروفة!
+
+الإثبات:
+لنفرض أن α = tan⁻¹(x)
+إذن tan(α) = x
+
+ونفرض أن β = tan⁻¹(1/x)
+إذن tan(β) = 1/x
+
+نلاحظ أن tan(α) × tan(β) = x × (1/x) = 1
+وهذا يعني أن α + β = π/2 (زاويتان متتامتان)
+
+الخطوة 2: بما أن المجموع ثابت (π/2)
+y = π/2 (ثابت)
+y' = d/dx(π/2) = 0
+
+العبارة صحيحة`
+    },
+    "23_tf2": {
+        text: "س2.2 - النهاية lim(x→1) [ln(x)/(x-1)] = 1",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: نتحقق من الشكل
+عند x = 1: ln(1)/(1-1) = 0/0 (شكل غير معين)
+
+الخطوة 2: نستخدم قاعدة لوبيتال (L'Hôpital's Rule)
+lim(x→1) [ln(x)/(x-1)]
+= lim(x→1) [d/dx(ln x) / d/dx(x-1)]
+= lim(x→1) [(1/x)/1]
+= lim(x→1) [1/x]
+= 1/1 = 1
+
+العبارة صحيحة`
+    },
+    "23_tf3": {
+        text: "س2.3 - هل 5^π = e^(π ln 5)؟",
+        explain: `الشرح التفصيلي:
+
+هذه خاصية أساسية من خواص الأسس واللوغاريتمات.
+
+القاعدة العامة: a^b = e^(b·ln(a))
+
+الإثبات:
+لنفرض أن y = a^b
+نأخذ اللوغاريتم الطبيعي للطرفين:
+ln(y) = ln(a^b)
+ln(y) = b·ln(a)
+
+بأخذ الأس e للطرفين:
+y = e^(b·ln(a))
+
+بالتعويض: a^b = e^(b·ln(a))
+
+إذن: 5^π = e^(π·ln(5))
+
+العبارة صحيحة`
+    },
+    "23_tf4": {
+        text: "س2.4 - إذا كان y = ln(x)/(1+ln(x))، فإن y'(e) = (e-1)/4",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: نستخدم قاعدة القسمة
+y = ln(x)/(1+ln(x))
+
+y' = [(1/x)(1+ln x) - ln(x)·(1/x)] / (1+ln x)²
+y' = [(1/x)[(1+ln x) - ln x]] / (1+ln x)²
+y' = (1/x) / (1+ln x)²
+y' = 1/[x(1+ln x)²]
+
+الخطوة 2: التعويض بـ x = e
+عند x = e: ln(e) = 1
+y'(e) = 1/[e(1+1)²]
+y'(e) = 1/[e·4]
+y'(e) = 1/(4e)
+
+الخطوة 3: المقارنة
+1/(4e) ≠ (e-1)/4
+
+العبارة خاطئة`
+    },
+    "23_tf5": {
+        text: "س2.5 - هل sin(sin⁻¹(2)) = 2؟",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: فهم نطاق الدالة sin⁻¹
+الدالة العكسية للجيب sin⁻¹(x) (أو arcsin(x))
+معرفة فقط للقيم: -1 ≤ x ≤ 1
+
+الخطوة 2: التحقق من القيمة المعطاة
+المطلوب: sin⁻¹(2)
+لكن 2 > 1، وهي خارج مجال تعريف الدالة!
+
+الخطوة 3: الاستنتاج
+sin⁻¹(2) غير معرفة (undefined)
+لذلك sin(sin⁻¹(2)) غير معرفة أيضاً
+
+العبارة خاطئة - لأن sin⁻¹(2) غير موجودة`
+    },
+    // 2025 Exam Translations
+    "25_q1": {
+        text: "س1.1 - ∫ 2e^(3x) dx =",
+        options: ["أ) 2e^x + c", "ب) 2ln(x) + c", "ج) (2/3)e^(3x) + c", "د) 2e^(3x) + c", "هـ) 6e^(3x) + c"],
+        explain: `الشرح التفصيلي:
+
+نتكامل الدالة 2e^(3x)
+
+الخطوة 1: نستخدم قاعدة التكامل
+∫ e^(ax) dx = (1/a)e^(ax) + c
+
+الخطوة 2: تطبيق القاعدة
+∫ 2e^(3x) dx = 2 × ∫ e^(3x) dx
+= 2 × (1/3)e^(3x) + c
+= (2/3)e^(3x) + c
+
+الإجابة الصحيحة هي (ج) (2/3)e^(3x) + c`
+    },
+    "25_q2": {
+        text: "س1.2 - اشتق (x² + 2)³",
+        options: ["أ) (x+2)^(1/2)", "ب) 2x(x²+2)²", "ج) 6x²(x³+2)²", "د) 3x²(x³+2)", "هـ) 6x(x²+2)²"],
+        explain: `الشرح التفصيلي:
+
+نستخدم قاعدة السلسلة (Chain Rule)
+
+الخطوة 1: تحديد الدالة الخارجية والداخلية
+الدالة الخارجية: u³
+الدالة الداخلية: u = x² + 2
+
+الخطوة 2: تطبيق قاعدة السلسلة
+d/dx[u³] = 3u² × du/dx
+
+الخطوة 3: حساب du/dx
+du/dx = d/dx(x² + 2) = 2x
+
+الخطوة 4: التعويض
+d/dx[(x²+2)³] = 3(x²+2)² × 2x
+= 6x(x²+2)²
+
+الإجابة الصحيحة هي (هـ) 6x(x²+2)²`
+    },
+    "25_q3": {
+        text: "س1.3 - باستخدام التعويض u = cos(x)، ∫ cos³(x)sin(x) dx يكافئ:",
+        options: ["أ) ∫ u³ du", "ب) ∫ 3u² du", "ج) (1/3)∫ u³ du", "د) ∫ u⁴ du", "هـ) -∫ u³ du"],
+        explain: `الشرح التفصيلي:
+
+نستخدم طريقة التعويض (Substitution)
+
+الخطوة 1: التعويض
+u = cos(x)
+du = -sin(x) dx
+إذن: sin(x) dx = -du
+
+الخطوة 2: تحويل التكامل
+∫ cos³(x) sin(x) dx
+= ∫ u³ × (-du)
+= -∫ u³ du
+
+الإجابة الصحيحة هي (هـ) -∫ u³ du`
+    },
+    "25_q4": {
+        text: "س1.4 - ∫₀¹ xe^(x²) dx =",
+        options: ["أ) (1/2)(e+1)", "ب) e-1", "ج) (1/2)(e-1)", "د) e²/2", "هـ) (1/2)e(e³-1)"],
+        explain: `الشرح التفصيلي:
+
+نستخدم طريقة التعويض
+
+الخطوة 1: التعويض
+u = x²
+du = 2x dx
+إذن: x dx = du/2
+
+الخطوة 2: تغيير حدود التكامل
+عند x = 0: u = 0
+عند x = 1: u = 1
+
+الخطوة 3: تحويل التكامل
+∫₀¹ xe^(x²) dx = (1/2)∫₀¹ e^u du
+= (1/2)[e^u]₀¹
+= (1/2)(e¹ - e⁰)
+= (1/2)(e - 1)
+
+الإجابة الصحيحة هي (ج) (1/2)(e-1)`
+    },
+    "25_tf31": {
+        text: "س2.31 - الرسوم البيانية لجميع الدوال اللوغاريتمية تمر بالنقطة (0,1)",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: فهم الدوال اللوغاريتمية
+الدالة اللوغاريتمية العامة: y = logₐ(x)
+
+الخطوة 2: التحقق من النقطة (0,1)
+عند x = 0، log(0) غير معرف!
+لأن اللوغاريتم معرف فقط للقيم الموجبة (x > 0)
+
+الخطوة 3: النقطة الصحيحة
+جميع الدوال اللوغاريتمية تمر بالنقطة (1, 0)
+لأن logₐ(1) = 0 لأي أساس a
+
+العبارة خاطئة`
+    },
+    "25_tf32": {
+        text: "س2.32 - استخدام التكامل بالتجزئة مع u=x و dv=e^(x³)dx لحساب ∫xe^(x³)dx اختيار جيد",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: تحليل الاختيار
+إذا اخترنا u = x و dv = e^(x³)dx
+
+الخطوة 2: المشكلة
+لإيجاد v، نحتاج لحساب ∫e^(x³)dx
+لكن هذا التكامل ليس له صيغة مغلقة!
+لا يمكن التعبير عنه بدوال أولية.
+
+الخطوة 3: الاستنتاج
+هذا اختيار سيء للتكامل بالتجزئة
+لأنه يؤدي لتكامل أصعب من الأصلي.
+
+الطريقة الصحيحة: التعويض u = x³
+
+العبارة خاطئة`
+    },
+    "25_tf33": {
+        text: "س2.33 - e^(-x) سالبة لبعض قيم x",
+        explain: `الشرح التفصيلي:
+
+الخطوة 1: خصائص الدالة الأسية
+الدالة e^x دائماً موجبة لجميع قيم x الحقيقية
+e^x > 0 لكل x ∈ ℝ
+
+الخطوة 2: تطبيق على e^(-x)
+e^(-x) = 1/e^x
+
+بما أن e^x > 0 دائماً
+إذن 1/e^x > 0 دائماً
+
+الخطوة 3: الاستنتاج
+e^(-x) > 0 لجميع قيم x
+لا توجد قيمة x تجعل e^(-x) سالبة
+
+العبارة خاطئة`
+    },
+    "25_tf34": {
+        text: "س2.34 - ∫[f(x)]ⁿ f'(x) dx = [f(x)]^(n+1)/(n+1) + c",
+        explain: `الشرح التفصيلي:
+
+هذه صيغة التعويض القياسية.
+
+الخطوة 1: التعويض
+لنفرض u = f(x)
+إذن du = f'(x) dx
+
+الخطوة 2: تحويل التكامل
+∫[f(x)]ⁿ f'(x) dx = ∫uⁿ du
+
+الخطوة 3: حساب التكامل
+∫uⁿ du = u^(n+1)/(n+1) + c
+
+الخطوة 4: إعادة التعويض
+= [f(x)]^(n+1)/(n+1) + c
+
+العبارة صحيحة`
+    },
+    "25_tf35": {
+        text: "س2.35 - d/dx(tan x) = lim(h→0) [tan(x+h) - tan(x)]/h",
+        explain: `الشرح التفصيلي:
+
+هذا هو تعريف المشتقة من المبادئ الأولى!
+
+التعريف الأساسي للمشتقة:
+f'(x) = lim(h→0) [f(x+h) - f(x)]/h
+
+بتطبيق التعريف على f(x) = tan(x):
+d/dx(tan x) = lim(h→0) [tan(x+h) - tan(x)]/h
+
+هذا هو بالضبط ما هو مكتوب في العبارة.
+
+العبارة صحيحة`
+    }
+};
+
+// ===================== EXAM DATABASE =====================
+const examDatabase = {
+    "room_2023": {
+        title: "Final Exam 2022/2023 - Dr. Hossam Radwan",
+        meta: "MATH102 | June 2023 | Time: 2 hours | Total: 70 Marks",
+        questions: [
+            {
+                id: "23_q1", type: "mcq",
+                text: "Q1.1 - Find the value of $c$ for which $f(x) = \\begin{cases} x^2-3, & x\\le1 \\\\ 2x-c, & x>1 \\end{cases}$ is continuous.",
+                options: ["a) 4","b) 6","c) 1","d) None of these"],
+                answer: 0,
+                explain: "For continuity at x=1: lim(x→1⁻) = 1−3 = −2 and lim(x→1⁺) = 2(1)−c = 2−c. Setting equal: 2−c = −2 → c = 4."
+            },
+            {
+                id: "23_q2", type: "mcq",
+                text: "Q1.2 - Differentiate: $h(x) = \\csc\\sqrt{x}$",
+                options: ["a) $-\\cot^2\\sqrt{x}$","b) $\\dfrac{-\\csc\\sqrt{x}\\cot\\sqrt{x}}{2\\sqrt{x}}$","c) $-\\csc\\dfrac{1}{2\\sqrt{x}}\\cot\\dfrac{1}{2\\sqrt{x}}$","d) None of these"],
+                answer: 1,
+                explain: "Using chain rule: h'(x) = −csc(√x)·cot(√x) · d/dx(√x) = −csc(√x)·cot(√x) · 1/(2√x)."
+            },
+            {
+                id: "23_q3", type: "mcq",
+                text: "Q1.3 - If $2\\ln x - 2 = 0$, then $x =$",
+                options: ["a) 0","b) $e$","c) 1","d) None of these"],
+                answer: 1,
+                explain: "2 ln x = 2 → ln x = 1 → x = e."
+            },
+            {
+                id: "23_q4", type: "mcq",
+                text: "Q1.4 - Find $\\dfrac{dy}{dx}$ for $5x^2 - 2xy + 7y^2 = 0$",
+                options: ["a) $10x - 2y + 12$","b) $\\dfrac{y-5x}{7-y}$","c) $\\dfrac{y-5x}{7y-x}$","d) None of these"],
+                answer: 2,
+                explain: "Implicit differentiation: 10x − 2y − 2x·y' + 14y·y' = 0 → y'(14y−2x) = 2y−10x → y' = (y−5x)/(7y−x)."
+            },
+            {
+                id: "23_q5", type: "mcq",
+                text: "Q1.5 - If $y = \\cot t$, $x = \\tan t$, then $\\dfrac{dy}{dx} =$",
+                options: ["a) $-\\cot^2 t$","b) $\\cot^2 t$","c) $-\\tan^2 t$","d) $\\tan^2 t$"],
+                answer: 0,
+                explain: "dy/dt = −csc²t, dx/dt = sec²t. dy/dx = −csc²t / sec²t = −cos²t/sin²t = −cot²t."
+            },
+            {
+                id: "23_tf1", type: "tf",
+                text: "Q2.1 - If $y = \\tan^{-1}x + \\tan^{-1}\\dfrac{1}{x}$, then $y' = 0$.",
+                answer: true,
+                explain: "tan⁻¹x + tan⁻¹(1/x) = π/2 for x>0 (constant), so derivative = 0."
+            },
+            {
+                id: "23_tf2", type: "tf",
+                text: "Q2.2 - $\\displaystyle\\lim_{x\\to 1}\\frac{\\ln x}{x-1} = 1$",
+                answer: true,
+                explain: "L'Hopital: lim (1/x)/1 = 1 at x=1."
+            },
+            {
+                id: "23_tf3", type: "tf",
+                text: "Q2.3 - $5^\\pi = e^{\\pi \\ln 5}$",
+                answer: true,
+                explain: "By definition: a^b = e^(b·ln a), so 5^π = e^(π·ln 5)."
+            },
+            {
+                id: "23_tf4", type: "tf",
+                text: "Q2.4 - If $y = \\dfrac{\\ln x}{1+\\ln x}$, then $y'(e) = \\dfrac{e-1}{4}$",
+                answer: false,
+                explain: "y' = [1/x(1+ln x) − ln x·(1/x)] / (1+ln x)² = 1/[x(1+ln x)²]. At x=e: y'(e) = 1/(e·4) = 1/(4e) ≠ (e−1)/4."
+            },
+            {
+                id: "23_tf5", type: "tf",
+                text: "Q2.5 - $\\sin(\\sin^{-1} 2) = 2$",
+                answer: false,
+                explain: "sin⁻¹ is only defined for inputs in [−1,1]. sin⁻¹(2) is undefined."
+            }
+        ]
+    },
+
+    "room_2025": {
+        title: "Final Exam 2024/2025",
+        meta: "MATH102 | Minia University, Dept. of Mathematics | Time: 2 hours",
+        questions: [
+            {
+                id: "25_q1", type: "mcq",
+                text: "Q1.1 - $\\int 2e^{3x}\\,dx =$",
+                options: ["a) $2e^x+c$","b) $2\\ln x+c$","c) $\\dfrac{2}{3}e^{3x}+c$","d) $2e^{3x}+c$","e) $6e^{3x}+c$"],
+                answer: 2,
+                explain: "∫2e^(3x)dx = 2 · e^(3x)/3 + c = (2/3)e^(3x) + c."
+            },
+            {
+                id: "25_q2", type: "mcq",
+                text: "Q1.2 - Differentiate $(x^2+2)^3$",
+                options: ["a) $(x+2)^{1/2}$","b) $2x(x^2+2)^2$","c) $6x^2(x^3+2)^2$","d) $3x^2(x^3+2)$","e) $6x(x^2+2)^2$"],
+                answer: 4,
+                explain: "d/dx(u³) = 3u²·u', u = x²+2, u'=2x → 3(x²+2)²·2x = 6x(x²+2)²."
+            },
+            {
+                id: "25_q3", type: "mcq",
+                text: "Q1.3 - Using $u=\\cos x$, $\\int\\cos^3 x\\sin x\\,dx$ is equivalent to:",
+                options: ["a) $\\int u^3\\,du$","b) $\\int 3u^2\\,du$","c) $\\frac{1}{3}\\int u^3\\,du$","d) $\\int u^4\\,du$","e) $-\\int u^3\\,du$"],
+                answer: 4,
+                explain: "u=cos x → du=−sin x dx, so sin x dx = −du. ∫cos³x sin x dx = ∫u³(−du) = −∫u³du."
+            },
+            {
+                id: "25_q4", type: "mcq",
+                text: "Q1.4 - $\\displaystyle\\int_0^1 xe^{x^2}\\,dx =$",
+                options: ["a) $\\frac{1}{2}(e+1)$","b) $e-1$","c) $\\frac{1}{2}(e-1)$","d) $\\frac{e^2}{2}$","e) $\\frac{1}{2}e(e^3-1)$"],
+                answer: 2,
+                explain: "u=x², du=2x dx → (1/2)∫₀¹ eᵘ du = (1/2)[eᵘ]₀¹ = (1/2)(e−1)."
+            },
+            {
+                id: "25_q5", type: "mcq",
+                text: "Q1.5 - If $\\int_1^{10}f(x)dx=4$ and $\\int_{10}^{3}f(x)dx=7$, then $\\int_1^{3}f(x)dx=$",
+                options: ["a) 10","b) −3","c) 3","d) 11","e) 12"],
+                answer: 3,
+                explain: "∫₁³ f = ∫₁¹⁰ f + ∫₁₀³ f = 4 + 7 = 11."
+            },
+            {
+                id: "25_q6", type: "mcq",
+                text: "Q1.6 - Using integration by parts, $\\int xe^x\\,dx$ is equivalent to:",
+                options: ["a) $xe^x+\\int e^x dx$","b) $xe^x-\\int e^x dx$","c) $x-\\int e^x dx$","d) $x+\\int e^x dx$","e) $xe^x$"],
+                answer: 1,
+                explain: "IBP: u=x, dv=eˣdx → du=dx, v=eˣ. ∫xe^x dx = xe^x − ∫e^x dx."
+            },
+            {
+                id: "25_tf31", type: "tf",
+                text: "Q2.31 - The graphs of all logarithmic functions pass through the point $(0,1)$.",
+                answer: false,
+                explain: "Logarithmic functions pass through (1,0) not (0,1). At x=0, ln(0) is undefined."
+            },
+            {
+                id: "25_tf32", type: "tf",
+                text: "Q2.32 - Using IBP with $u=x$ and $dv=e^{x^3}dx$ to evaluate $\\int xe^{x^3}dx$ is a good choice.",
+                answer: false,
+                explain: "If dv = e^(x³)dx, then v = ∫e^(x³)dx which has no closed form - bad choice."
+            },
+            {
+                id: "25_tf33", type: "tf",
+                text: "Q2.33 - $e^{-x}$ is negative for some values of $x$.",
+                answer: false,
+                explain: "e^(−x) > 0 for all real x."
+            },
+            {
+                id: "25_tf34", type: "tf",
+                text: "Q2.34 - $\\int(f(x))^n f'(x)\\,dx = \\dfrac{(f(x))^{n+1}}{n+1}+c$",
+                answer: true,
+                explain: "Standard substitution formula: let u=f(x)."
+            },
+            {
+                id: "25_tf35", type: "tf",
+                text: "Q2.35 - $\\dfrac{d}{dx}(\\tan x)=\\displaystyle\\lim_{h\\to 0}\\dfrac{\\tan(x+h)-\\tan x}{h}$",
+                answer: true,
+                explain: "This is the definition of derivative by first principles."
+            }
+        ]
+    },
+
+    "room_2024": {
+        title: "Final Exam 2023/2024",
+        meta: "MATH102 | Minia University, Dept. of Mathematics | Time: 2 hours",
+        questions: [
+            {
+                id: "24_q1", type: "mcq",
+                text: "Q1.1 - $\\int 2e^x\\,dx =$",
+                options: ["a) $2e^x+c$","b) $2\\ln x+c$","c) $2\\sin x+c$","d) $\\frac{2}{x+1}e^{x+1}+c$"],
+                answer: 0,
+                explain: "∫2eˣdx = 2eˣ + c."
+            },
+            {
+                id: "24_q2", type: "mcq",
+                text: "Q1.2 - Differentiate $(x^3+2)^2$",
+                options: ["a) $(x+2)^{1/2}$","b) $2x^2(x^3+2)$","c) $6x^2(x^3+2)$","d) $3x^2(x^3+2)$"],
+                answer: 2,
+                explain: "d/dx(x³+2)² = 2(x³+2)·3x² = 6x²(x³+2)."
+            },
+            {
+                id: "24_q3", type: "mcq",
+                text: "Q1.3 - Using $u=\\sin x$, $\\int\\sin^3 x\\cos x\\,dx$ is equivalent to:",
+                options: ["a) $\\int u^3\\,du$","b) $\\int 3u^2\\,du$","c) $\\frac{1}{3}\\int u^3\\,du$","d) $\\int u^4\\,du$"],
+                answer: 0,
+                explain: "u=sin x, du=cos x dx → ∫sin³x cos x dx = ∫u³ du."
+            },
+            {
+                id: "24_q4", type: "mcq",
+                text: "Q1.4 - $\\displaystyle\\int_0^1 xe^{x^2}\\,dx =$",
+                options: ["a) $\\frac{1}{2}(e+1)$","b) $e-1$","c) $\\frac{1}{2}(e-1)$","d) $\\frac{e^2}{2}$"],
+                answer: 2,
+                explain: "u=x², du=2x dx → (1/2)[eᵘ]₀¹ = (1/2)(e−1)."
+            },
+            {
+                id: "24_q5", type: "mcq",
+                text: "Q1.5 - If $\\int_1^{10}f(x)dx=4$ and $\\int_{10}^{3}f(x)dx=7$, then $\\int_1^{3}f(x)dx=$",
+                options: ["a) 11","b) −3","c) 3","d) 10"],
+                answer: 0,
+                explain: "∫₁³ f = ∫₁¹⁰ f + ∫₁₀³ f = 4+7 = 11."
+            },
+            {
+                id: "24_tf31", type: "tf",
+                text: "Q2.31 - The graphs of all logarithmic functions pass through the point $(0,1)$.",
+                answer: false,
+                explain: "They pass through (1,0)."
+            },
+            {
+                id: "24_tf32", type: "tf",
+                text: "Q2.32 - Using IBP with $u=x$ and $dv=e^{x^3}dx$ to evaluate $\\int xe^{x^3}dx$ is a good choice.",
+                answer: false,
+                explain: "∫e^(x³)dx has no closed form."
+            },
+            {
+                id: "24_tf33", type: "tf",
+                text: "Q2.33 - $e^{-x}$ is negative for some values of $x$.",
+                answer: false,
+                explain: "e^(−x) > 0 always."
+            },
+            {
+                id: "24_tf34", type: "tf",
+                text: "Q2.34 - $\\int(f(x))^n f'(x)\\,dx = \\dfrac{(f(x))^{n+1}}{n+1}+c$",
+                answer: true,
+                explain: "Standard u-substitution formula."
+            },
+            {
+                id: "24_tf35", type: "tf",
+                text: "Q2.35 - $\\dfrac{d}{dx}(\\sin x)=\\displaystyle\\lim_{h\\to 0}\\dfrac{\\sin(x+h)-\\sin x}{h}$",
+                answer: true,
+                explain: "Definition of derivative."
+            }
+        ]
+    }
+};
+
+// ===================== APP STATE =====================
+let activeRoomKey = "room_2023";
+let roomScores = {};
+let userAnswers = {};
+let currentTheme = "dark";
+let translatedQuestions = {};
+
+// ===================== STORAGE FUNCTIONS =====================
+function loadStateFromStorage() {
+    try {
+        const storedScores = localStorage.getItem("math102_portal_scores_v2");
+        const storedAnswers = localStorage.getItem("math102_portal_answers_v2");
+        const storedActiveRoom = localStorage.getItem("math102_portal_activeRoom_v2");
+        const storedTheme = localStorage.getItem("math102_portal_theme_v2");
+        const storedTranslations = localStorage.getItem("math102_portal_translations_v2");
+        if (storedScores) roomScores = JSON.parse(storedScores);
+        if (storedAnswers) userAnswers = JSON.parse(storedAnswers);
+        if (storedActiveRoom && examDatabase[storedActiveRoom]) activeRoomKey = storedActiveRoom;
+        if (storedTheme) currentTheme = storedTheme;
+        if (storedTranslations) translatedQuestions = JSON.parse(storedTranslations);
+    } catch (e) {}
+}
+
+function saveStateToStorage() {
+    try {
+        localStorage.setItem("math102_portal_scores_v2", JSON.stringify(roomScores));
+        localStorage.setItem("math102_portal_answers_v2", JSON.stringify(userAnswers));
+        localStorage.setItem("math102_portal_activeRoom_v2", activeRoomKey);
+        localStorage.setItem("math102_portal_theme_v2", currentTheme);
+        localStorage.setItem("math102_portal_translations_v2", JSON.stringify(translatedQuestions));
+    } catch (e) {}
+}
+
+// ===================== THEME FUNCTIONS =====================
+function applyThemeOnLoad() {
+    const bodyEl = document.getElementById("app-body");
+    const toggleBtn = document.getElementById("theme-btn");
+    if (currentTheme === "light") {
+        bodyEl.classList.add("light-theme");
+        toggleBtn.innerText = "Dark";
+    } else {
+        bodyEl.classList.remove("light-theme");
+        toggleBtn.innerText = "Light";
+    }
+}
+
+function toggleThemeEngineMode() {
+    currentTheme = currentTheme === "dark" ? "light" : "dark";
+    saveStateToStorage();
+    applyThemeOnLoad();
+}
+
+// ===================== LATEX CONVERTER =====================
+const SUP_MAP = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁺':'+','⁻':'-','⁽':'(','⁾':')','ⁿ':'n','ⁱ':'i','ᵃ':'a','ᵇ':'b','ᶜ':'c','ᵈ':'d','ᵉ':'e','ᵏ':'k','ᵐ':'m','ᵒ':'o','ᵖ':'p','ʳ':'r','ˢ':'s','ᵗ':'t','ᵘ':'u','ᵛ':'v','ʷ':'w','ˣ':'x','ʸ':'y','ᶻ':'z'};
+const SUB_MAP = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','₊':'+','₋':'-','ₓ':'x','ₙ':'n','ₐ':'a','ₑ':'e','ₒ':'o','ᵢ':'i','ⱼ':'j','ₖ':'k','ₘ':'m','ₚ':'p','ₛ':'s','ₜ':'t'};
+const SYM_MAP = {'π':'\\pi ','θ':'\\theta ','∞':'\\infty ','∑':'\\sum ','∏':'\\prod ','∫':'\\int ','·':'\\cdot ','×':'\\times ','÷':'\\div ','→':'\\to ','⇒':'\\Rightarrow ','⇔':'\\Leftrightarrow ','≠':'\\neq ','≤':'\\le ','≥':'\\ge ','±':'\\pm ','∓':'\\mp ','⋯':'\\cdots ','…':'\\dots ','∂':'\\partial ','≈':'\\approx ','∎':'\\;\\blacksquare','∈':'\\in ','∉':'\\notin ','∪':'\\cup ','∩':'\\cap ','∅':'\\varnothing ','∀':'\\forall ','∃':'\\exists ','α':'\\alpha ','β':'\\beta ','γ':'\\gamma ','δ':'\\delta ','ε':'\\varepsilon ','λ':'\\lambda ','μ':'\\mu ','σ':'\\sigma ','φ':'\\phi ','ψ':'\\psi ','ω':'\\omega ','Δ':'\\Delta ','Σ':'\\Sigma ','Ω':'\\Omega ','−':'-','–':'-','—':'-'};
+const FUNCS = ['arcsin','arccos','arctan','sinh','cosh','tanh','sin','cos','tan','sec','csc','cot','log','ln','lim','exp','max','min','det','gcd','deg'];
+const DIFFS = ['dx','dy','dt','du','dv','dw','ds','dr','dn','dz'];
+
+function lineToTeX(line) {
+    let s = line;
+    const supChars = Object.keys(SUP_MAP).join('');
+    const subChars = Object.keys(SUB_MAP).join('');
+    s = s.replace(new RegExp('[' + supChars + ']+', 'g'), m => '^{' + [...m].map(c => SUP_MAP[c]).join('') + '}');
+    s = s.replace(new RegExp('[' + subChars + ']+', 'g'), m => '_{' + [...m].map(c => SUB_MAP[c]).join('') + '}');
+    s = s.replace(/\^\(([^()]*)\)/g, '^{$1}');
+    s = s.replace(/_\(([^()]*)\)/g, '_{$1}');
+    s = s.replace(/√\(([^()]*)\)/g, '\\sqrt{$1}');
+    s = s.replace(/√\{([^{}]*)\}/g, '\\sqrt{$1}');
+    s = s.replace(/√([A-Za-z0-9])/g, '\\sqrt{$1}');
+    s = s.replace(/[^\x00-\x7F]/g, c => SYM_MAP[c] !== undefined ? SYM_MAP[c] : c);
+    FUNCS.forEach(fn => { s = s.replace(new RegExp('\\b' + fn + '\\b', 'g'), '\\' + fn + ' '); });
+    const store = [];
+    const protect = str => { store.push(str); return '\x01' + (store.length - 1) + '\x02'; };
+    s = s.replace(/\\[a-zA-Z]+/g, m => protect(m));
+    DIFFS.forEach(d => { s = s.replace(new RegExp('\\b' + d + '\\b', 'g'), m => protect(m)); });
+    s = s.replace(/[A-Za-z]{2,}/g, m => '\\text{' + m + '}');
+    s = s.replace(/ /g, '\\ ');
+    s = s.replace(/\x01(\d+)\x02/g, (_, i) => store[+i]);
+    return s;
+}
+
+function renderSolutionHTML(raw) {
+    if (!raw) return '';
+    const lines = [];
+    raw.split('\n').forEach(l => {
+        const t = l.trim();
+        if (!t) { lines.push(''); return; }
+        t.split(/(?<=[.✓✗∎])\s+/).forEach(seg => { if (seg.trim()) lines.push(seg.trim()); });
+    });
+    return lines.map(l => l === ''
+        ? '<div class="h-1"></div>'
+        : '<div class="sol-line">\\(\\displaystyle ' + lineToTeX(l) + '\\)</div>'
+    ).join('');
+}
+
+// ===================== TRANSLATION FUNCTION =====================
+function toggleTranslation(qId) {
+    const key = `${activeRoomKey}_${qId}`;
+    const translationBox = document.getElementById(`translation-${qId}`);
+    const translateBtn = document.getElementById(`translate-btn-${qId}`);
+    
+    if (!translationBox || !translateBtn) return;
+    
+    if (translatedQuestions[key]) {
+        // Hide translation
+        delete translatedQuestions[key];
+        translationBox.classList.add('hidden');
+        translateBtn.innerHTML = '<span class="text-sm">ترجم للعربية</span>';
+        translateBtn.classList.remove('bg-green-600');
+        translateBtn.classList.add('bg-gradient-to-r', 'from-blue-500', 'to-purple-600');
+    } else {
+        // Show translation
+        translatedQuestions[key] = true;
+        const trans = translations[qId];
+        
+        if (trans) {
+            let translationHTML = `
+                <div class="translated-content rounded-xl p-4 mt-3 arabic-text">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-lg">🇸🇦</span>
+                        <span class="text-sm font-bold text-blue-400">الترجمة العربية</span>
+                    </div>
+                    <p class="text-sm font-semibold text-main mb-3">${trans.text}</p>
+            `;
+            
+            if (trans.options) {
+                translationHTML += `<div class="space-y-2 mb-3">`;
+                trans.options.forEach(opt => {
+                    translationHTML += `<div class="text-sm text-muted pr-4">${opt}</div>`;
+                });
+                translationHTML += `</div>`;
+            }
+            
+            if (trans.explain) {
+                translationHTML += `
+                    <div class="detailed-explain rounded-lg p-3 mt-3">
+                        <p class="text-xs font-bold text-emerald-400 mb-2">الشرح التفصيلي:</p>
+                        <div class="text-sm text-slate-200 whitespace-pre-line leading-relaxed">${trans.explain}</div>
+                    </div>
+                `;
+            }
+            
+            translationHTML += `</div>`;
+            translationBox.innerHTML = translationHTML;
+        } else {
+            translationBox.innerHTML = `
+                <div class="translated-content rounded-xl p-4 mt-3 arabic-text">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-lg">🇸🇦</span>
+                        <span class="text-sm font-bold text-amber-400">الترجمة غير متوفرة حاليا</span>
+                    </div>
+                    <p class="text-sm text-muted">سيتم اضافة الترجمة قريبا...</p>
+                </div>
+            `;
+        }
+        
+        translationBox.classList.remove('hidden');
+        translateBtn.innerHTML = '<span class="text-sm">اخفاء الترجمة</span>';
+        translateBtn.classList.remove('bg-gradient-to-r', 'from-blue-500', 'to-purple-600');
+        translateBtn.classList.add('bg-green-600');
+    }
+    
+    saveStateToStorage();
+    
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([translationBox]).catch(err => {});
+    }
+}
+
+// ===================== RENDER FUNCTIONS =====================
+function renderQuestions(questions) {
+    const form = document.getElementById("exam-questions-form");
+    form.innerHTML = "";
+    questions.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "card-bg border rounded-2xl p-5 space-y-3";
+        card.id = `card-${q.id}`;
+
+        let html = `
+            <div class="flex items-start justify-between gap-2 flex-wrap">
+                <p class="text-sm font-semibold text-main leading-relaxed flex-1">${q.text}</p>
+                <div class="flex items-center gap-2">
+                    <button type="button" id="translate-btn-${q.id}" onclick="toggleTranslation('${q.id}')" class="translate-btn text-white font-bold text-xs px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1.5">
+                        <span class="text-sm">ترجم للعربية</span>
+                    </button>
+                    <span id="status-${q.id}" class="text-xs shrink-0"></span>
+                </div>
+            </div>
+            <div id="translation-${q.id}" class="hidden"></div>
+        `;
+
+        if (q.type === "mcq") {
+            html += `<div class="space-y-2">`;
+            q.options.forEach((opt, oIdx) => {
+                const saved = userAnswers[activeRoomKey][q.id];
+                const isChecked = saved === oIdx ? "checked" : "";
+                html += `<label id="wrapper-${q.id}-${oIdx}" class="option-wrapper flex items-center gap-3 border p-4 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50">
+                    <input type="radio" name="${q.id}" value="${oIdx}" class="accent-indigo-500" ${isChecked} onchange="saveAnswer('${q.id}', ${oIdx})">
+                    <span class="text-sm">${opt}</span>
+                </label>`;
+            });
+            html += `</div>`;
+            
+            // Detailed explanation box
+            if (q.explain) {
+                html += `
+                    <div class="explain-box border rounded-xl p-4 hidden" id="explain-${q.id}">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-lg">💡</span>
+                            <p class="text-sm text-blue-300 font-bold">Detailed Explanation</p>
+                        </div>
+                        <div class="sol-content text-sm text-slate-200">${renderSolutionHTML(q.explain)}</div>
+                    </div>
+                    <button type="button" id="explain-btn-${q.id}" onclick="toggleExplanation('${q.id}')" class="text-[11px] text-blue-400 hover:text-blue-300 font-semibold transition-colors cursor-pointer hidden">
+                        Show Detailed Explanation
+                    </button>
+                `;
+            }
+        } else if (q.type === "tf") {
+            const saved = userAnswers[activeRoomKey][q.id];
+            const trueChecked = saved === "true" ? "checked" : "";
+            const falseChecked = saved === "false" ? "checked" : "";
+            html += `<div class="flex gap-3">
+                <label id="wrapper-${q.id}-true" class="option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50">
+                    <input type="radio" name="${q.id}" value="true" class="accent-indigo-500" ${trueChecked} onchange="saveAnswer('${q.id}', 'true')">
+                    <span class="text-sm font-semibold">True</span>
+                </label>
+                <label id="wrapper-${q.id}-false" class="option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl cursor-pointer transition-all hover:border-indigo-500/50">
+                    <input type="radio" name="${q.id}" value="false" class="accent-indigo-500" ${falseChecked} onchange="saveAnswer('${q.id}', 'false')">
+                    <span class="text-sm font-semibold">False</span>
+                </label>
+            </div>`;
+            
+            if (q.explain) {
+                html += `
+                    <div class="explain-box border rounded-xl p-4 hidden" id="explain-${q.id}">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-lg">💡</span>
+                            <p class="text-sm text-blue-300 font-bold">Detailed Explanation</p>
+                        </div>
+                        <div class="sol-content text-sm text-slate-200">${renderSolutionHTML(q.explain)}</div>
+                    </div>
+                    <button type="button" id="explain-btn-${q.id}" onclick="toggleExplanation('${q.id}')" class="text-[11px] text-blue-400 hover:text-blue-300 font-semibold transition-colors cursor-pointer hidden">
+                        Show Detailed Explanation
+                    </button>
+                `;
+            }
+        }
+        
+        card.innerHTML = html;
+        form.appendChild(card);
+        
+        // Restore translation state
+        const key = `${activeRoomKey}_${q.id}`;
+        if (translatedQuestions[key]) {
+            translatedQuestions[key] = false;
+            setTimeout(() => toggleTranslation(q.id), 100);
+        }
+    });
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([form]).catch(err => {});
+    }
+}
+
+function toggleExplanation(qId) {
+    const explainBox = document.getElementById(`explain-${qId}`);
+    const btn = document.getElementById(`explain-btn-${qId}`);
+    if (!explainBox || !btn) return;
+    
+    explainBox.classList.toggle("hidden");
+    btn.textContent = explainBox.classList.contains("hidden") ? "Show Detailed Explanation" : "Hide Explanation";
+}
+
+function saveAnswer(qId, value) {
+    userAnswers[activeRoomKey][qId] = value;
+    saveStateToStorage();
+}
+
+// ===================== SUBMIT & FEEDBACK =====================
+function submitCurrentRoom() {
+    const questions = examDatabase[activeRoomKey].questions;
+    let score = 0, total = 0;
+    questions.forEach(q => {
+        if (q.type === "mcq" || q.type === "tf") {
+            total++;
+            const saved = userAnswers[activeRoomKey][q.id];
+            if (q.type === "mcq" && parseInt(saved) === q.answer) score++;
+            if (q.type === "tf") {
+                const correctStr = q.answer ? "true" : "false";
+                if (saved === correctStr) score++;
+            }
+        }
+    });
+    roomScores[activeRoomKey] = { submitted: true, score, total };
+    saveStateToStorage();
+    renderQuestions(questions);
+    applyVisualCorrectionFeedback();
+    updateNavbarBadgeStatus(activeRoomKey);
+    updateScoreBannerDisplay();
+    calculateOverallMetrics();
+}
+
+function applyVisualCorrectionFeedback() {
+    const questions = examDatabase[activeRoomKey].questions;
+    questions.forEach(q => {
+        const statusEl = document.getElementById(`status-${q.id}`);
+        const savedAns = userAnswers[activeRoomKey][q.id];
+        const explainBtn = document.getElementById(`explain-btn-${q.id}`);
+        const explainBox = document.getElementById(`explain-${q.id}`);
+        
+        if (q.type === "mcq") {
+            q.options.forEach((_, oIdx) => {
+                const optWrapper = document.getElementById(`wrapper-${q.id}-${oIdx}`);
+                if (optWrapper) optWrapper.className = "option-wrapper flex items-center gap-3 border p-4 rounded-xl opacity-60";
+            });
+            const correctWrapper = document.getElementById(`wrapper-${q.id}-${q.answer}`);
+            if (correctWrapper) {
+                correctWrapper.className = "flex items-center gap-3 bg-emerald-500/20 border border-emerald-500 text-emerald-600 font-bold p-4 rounded-xl opacity-100 shadow-sm";
+                if (!correctWrapper.querySelector('.correct-badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'correct-badge ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 whitespace-nowrap';
+                    badge.textContent = 'Correct Answer';
+                    correctWrapper.appendChild(badge);
+                }
+            }
+            
+            // Show explanation button and box
+            if (explainBtn) explainBtn.classList.remove("hidden");
+            if (explainBox) explainBox.classList.remove("hidden");
+            
+            if (savedAns !== undefined) {
+                const userIdx = parseInt(savedAns);
+                if (userIdx === q.answer) {
+                    if (statusEl) statusEl.innerHTML = "<span class='text-emerald-500 font-bold'>Correct</span>";
+                } else {
+                    const wrongWrapper = document.getElementById(`wrapper-${q.id}-${userIdx}`);
+                    if (wrongWrapper) wrongWrapper.className = "flex items-center gap-3 bg-rose-500/20 border border-rose-500 text-rose-600 font-bold p-4 rounded-xl opacity-100";
+                    if (statusEl) statusEl.innerHTML = "<span class='text-rose-500 font-bold'>Incorrect</span>";
+                }
+            } else {
+                if (statusEl) statusEl.innerHTML = "<span class='text-amber-500 font-semibold'>Unanswered</span>";
+            }
+        } else if (q.type === "tf") {
+            const trueWrapper = document.getElementById(`wrapper-${q.id}-true`);
+            const falseWrapper = document.getElementById(`wrapper-${q.id}-false`);
+            if (trueWrapper) trueWrapper.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl opacity-60";
+            if (falseWrapper) falseWrapper.className = "option-wrapper flex items-center gap-3 border px-5 py-3 rounded-xl opacity-60";
+            const correctStr = q.answer ? "true" : "false";
+            const correctWrapper = document.getElementById(`wrapper-${q.id}-${correctStr}`);
+            if (correctWrapper) {
+                correctWrapper.className = "flex items-center gap-3 bg-emerald-500/20 border border-emerald-500 text-emerald-600 font-bold px-5 py-3 rounded-xl opacity-100";
+                if (!correctWrapper.querySelector('.correct-badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'correct-badge ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-lg border border-emerald-500/40 whitespace-nowrap';
+                    badge.textContent = 'Correct Answer';
+                    correctWrapper.appendChild(badge);
+                }
+            }
+            
+            // Show explanation button and box
+            if (explainBtn) explainBtn.classList.remove("hidden");
+            if (explainBox) explainBox.classList.remove("hidden");
+            
+            if (savedAns !== undefined) {
+                if (savedAns === correctStr) {
+                    if (statusEl) statusEl.innerHTML = "<span class='text-emerald-500 font-bold'>Correct</span>";
+                } else {
+                    const wrongWrapper = document.getElementById(`wrapper-${q.id}-${savedAns}`);
+                    if (wrongWrapper) wrongWrapper.className = "flex items-center gap-3 bg-rose-500/20 border border-rose-500 text-rose-600 font-bold px-5 py-3 rounded-xl opacity-100";
+                    if (statusEl) statusEl.innerHTML = "<span class='text-rose-500 font-bold'>Incorrect</span>";
+                }
+            } else {
+                if (statusEl) statusEl.innerHTML = "<span class='text-amber-500 font-semibold'>Unanswered</span>";
+            }
+        }
+    });
+}
+
+function resetCurrentRoom() {
+    roomScores[activeRoomKey] = { submitted: false, score: 0, total: 0 };
+    userAnswers[activeRoomKey] = {};
+    // Clear translations for this room
+    Object.keys(translatedQuestions).forEach(key => {
+        if (key.startsWith(activeRoomKey)) {
+            delete translatedQuestions[key];
+        }
+    });
+    saveStateToStorage();
+    updateNavbarBadgeStatus(activeRoomKey);
+    renderQuestions(examDatabase[activeRoomKey].questions);
+    updateScoreBannerDisplay();
+    calculateOverallMetrics();
+}
+
+// ===================== UI UPDATES =====================
+function updateScoreBannerDisplay() {
+    const banner = document.getElementById("room-score-banner");
+    const state = roomScores[activeRoomKey];
+    if (state && state.submitted && state.total > 0) {
+        banner.classList.remove("hidden");
+        document.getElementById("room-score-breakdown").innerText = `You scored ${state.score} out of ${state.total} questions correctly.`;
+        const pct = Math.round((state.score / state.total) * 100);
+        document.getElementById("room-percentage-badge").innerText = `${pct}%`;
+    } else {
+        banner.classList.add("hidden");
+    }
+}
+
+function calculateOverallMetrics() {
+    let totalScore = 0, totalGraded = 0;
+    Object.keys(examDatabase).forEach(key => {
+        if (roomScores[key] && roomScores[key].submitted) {
+            totalScore += roomScores[key].score;
+            totalGraded += roomScores[key].total;
+        }
+    });
+    const overallPct = totalGraded > 0 ? Math.round((totalScore / totalGraded) * 100) : 0;
+    document.getElementById("overall-score-txt").innerText = `${overallPct}% Passed`;
+}
+
+function updateNavbarBadgeStatus(roomKey) {
+    const badge = document.getElementById(`badge-${roomKey}`);
+    const state = roomScores[roomKey];
+    if (!badge || !state) return;
+    if (state.submitted) {
+        if (state.total > 0) {
+            const pct = Math.round((state.score / state.total) * 100);
+            badge.innerText = `${pct}%`;
+            badge.className = `text-[9px] px-1.5 py-0.5 rounded border font-bold ${pct >= 50 ? 'badge-pass' : 'badge-fail'}`;
+        } else {
+            badge.innerText = "DONE";
+            badge.className = "text-[9px] px-1.5 py-0.5 rounded border font-bold badge-done";
+        }
+    } else {
+        badge.innerText = "IDLE";
+        badge.className = "tab-badge-idle text-[9px] px-1.5 py-0.5 rounded border font-bold";
+    }
+    const tabBtn = document.getElementById(`tab-${roomKey}`);
+    if (tabBtn) {
+        if (roomKey === activeRoomKey) {
+            tabBtn.className = "bg-indigo-600/20 border-indigo-500 text-indigo-400 shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+        } else {
+            tabBtn.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+        }
+    }
+}
+
+function switchRoom(key) {
+    activeRoomKey = key;
+    saveStateToStorage();
+    Object.keys(examDatabase).forEach(k => updateNavbarBadgeStatus(k));
+    const room = examDatabase[key];
+    document.getElementById("room-title").innerText = room.title;
+    document.getElementById("room-meta").innerText = room.meta;
+    renderQuestions(room.questions);
+    updateScoreBannerDisplay();
+    if (roomScores[key] && roomScores[key].submitted) applyVisualCorrectionFeedback();
+}
+
+// ===================== INITIALIZATION =====================
+function initializePlatform() {
+    loadStateFromStorage();
+    applyThemeOnLoad();
+    const navbarContainer = document.getElementById("navbar-rooms-container");
+    navbarContainer.innerHTML = "";
+    const roomLabels = {
+        "room_2023": "2023 Final",
+        "room_2025": "2025 Final",
+        "room_2024": "2024 Final"
+    };
+    Object.keys(examDatabase).forEach(key => {
+        if (!roomScores[key]) roomScores[key] = { submitted: false, score: 0, total: 0 };
+        if (!userAnswers[key]) userAnswers[key] = {};
+        const btn = document.createElement("button");
+        btn.id = `tab-${key}`;
+        btn.type = "button";
+        btn.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
+        btn.onclick = () => switchRoom(key);
+        btn.innerHTML = `<span>${roomLabels[key] || key}</span><span id="badge-${key}" class="tab-badge-idle text-[9px] px-1.5 py-0.5 rounded font-bold border">IDLE</span>`;
+        navbarContainer.appendChild(btn);
+        updateNavbarBadgeStatus(key);
+    });
+    switchRoom(activeRoomKey);
+    calculateOverallMetrics();
+}
+
+window.onload = initializePlatform;
+</script>
+
+    <footer class="nav-bg border-t border-slate-800/40 mt-16 py-12 px-6 transition-all duration-300 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6 text-center relative z-10">
+            <div class="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 px-4 py-1.5 rounded-xl shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-[10px] md:text-xs font-bold text-indigo-400 uppercase tracking-[0.2em] code-font">Minia University - Faculty of Science</span>
+            </div>
+            <div class="space-y-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-slate-400 font-extrabold opacity-80">Made With Passion By</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 pt-2">
+                    <h2 class="footer-name-1 text-2xl md:text-4xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none">ENG: ABO ANWER</h2>
+                    <span class="hidden md:block text-slate-500 font-light text-2xl">|</span>
+                    <h2 class="footer-name-2 text-2xl md:text-4xl font-black tracking-wide hover:scale-105 transition-transform cursor-default duration-300 select-none">ENG: HAMZA KAFAFI</h2>
+                </div>
+            </div>
+            <div class="w-40 h-[2px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-70 my-4"></div>
+            <p class="text-[10px] uppercase tracking-[0.4em] text-muted font-bold code-font opacity-60">2026 Premium Portal - MATH102 - First Level IT</p>
+        </div>
+    </footer>
+</body>
+</html>
