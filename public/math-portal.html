@@ -764,36 +764,90 @@ const examDatabase = {
 };
 
 // ===================== APP STATE =====================
-let activeRoomKey = "room_2023";
+let activeRoomKey = "room_2025";
 let roomScores = {};
 let userAnswers = {};
 let currentTheme = "dark";
 let translatedQuestions = {};
 
 // ===================== STORAGE FUNCTIONS =====================
+// Using both localStorage and sessionStorage for redundancy
 function loadStateFromStorage() {
     try {
-        const storedScores = localStorage.getItem("math102_portal_scores_v2");
-        const storedAnswers = localStorage.getItem("math102_portal_answers_v2");
-        const storedActiveRoom = localStorage.getItem("math102_portal_activeRoom_v2");
-        const storedTheme = localStorage.getItem("math102_portal_theme_v2");
-        const storedTranslations = localStorage.getItem("math102_portal_translations_v2");
+        // Try localStorage first, fallback to sessionStorage
+        let storedScores = localStorage.getItem("math102_portal_scores_v2") || sessionStorage.getItem("math102_portal_scores_v2");
+        let storedAnswers = localStorage.getItem("math102_portal_answers_v2") || sessionStorage.getItem("math102_portal_answers_v2");
+        let storedActiveRoom = localStorage.getItem("math102_portal_activeRoom_v2") || sessionStorage.getItem("math102_portal_activeRoom_v2");
+        let storedTheme = localStorage.getItem("math102_portal_theme_v2") || sessionStorage.getItem("math102_portal_theme_v2");
+        let storedTranslations = localStorage.getItem("math102_portal_translations_v2") || sessionStorage.getItem("math102_portal_translations_v2");
+        
+        // Also try cookies as additional fallback
+        if (!storedScores) storedScores = getCookie("math102_scores");
+        if (!storedAnswers) storedAnswers = getCookie("math102_answers");
+        if (!storedActiveRoom) storedActiveRoom = getCookie("math102_activeRoom");
+        if (!storedTheme) storedTheme = getCookie("math102_theme");
+        if (!storedTranslations) storedTranslations = getCookie("math102_translations");
+        
         if (storedScores) roomScores = JSON.parse(storedScores);
         if (storedAnswers) userAnswers = JSON.parse(storedAnswers);
         if (storedActiveRoom && examDatabase[storedActiveRoom]) activeRoomKey = storedActiveRoom;
         if (storedTheme) currentTheme = storedTheme;
         if (storedTranslations) translatedQuestions = JSON.parse(storedTranslations);
-    } catch (e) {}
+    } catch (e) {
+        console.error("Error loading state:", e);
+    }
 }
 
 function saveStateToStorage() {
     try {
-        localStorage.setItem("math102_portal_scores_v2", JSON.stringify(roomScores));
-        localStorage.setItem("math102_portal_answers_v2", JSON.stringify(userAnswers));
+        const scoresJSON = JSON.stringify(roomScores);
+        const answersJSON = JSON.stringify(userAnswers);
+        const translationsJSON = JSON.stringify(translatedQuestions);
+        
+        // Save to localStorage
+        localStorage.setItem("math102_portal_scores_v2", scoresJSON);
+        localStorage.setItem("math102_portal_answers_v2", answersJSON);
         localStorage.setItem("math102_portal_activeRoom_v2", activeRoomKey);
         localStorage.setItem("math102_portal_theme_v2", currentTheme);
-        localStorage.setItem("math102_portal_translations_v2", JSON.stringify(translatedQuestions));
+        localStorage.setItem("math102_portal_translations_v2", translationsJSON);
+        
+        // Save to sessionStorage as backup
+        sessionStorage.setItem("math102_portal_scores_v2", scoresJSON);
+        sessionStorage.setItem("math102_portal_answers_v2", answersJSON);
+        sessionStorage.setItem("math102_portal_activeRoom_v2", activeRoomKey);
+        sessionStorage.setItem("math102_portal_theme_v2", currentTheme);
+        sessionStorage.setItem("math102_portal_translations_v2", translationsJSON);
+        
+        // Save to cookies (for 365 days)
+        setCookie("math102_scores", scoresJSON, 365);
+        setCookie("math102_answers", answersJSON, 365);
+        setCookie("math102_activeRoom", activeRoomKey, 365);
+        setCookie("math102_theme", currentTheme, 365);
+        setCookie("math102_translations", translationsJSON, 365);
+    } catch (e) {
+        console.error("Error saving state:", e);
+    }
+}
+
+// Cookie helper functions
+function setCookie(name, value, days) {
+    try {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + expires.toUTCString() + ";path=/;SameSite=Lax";
     } catch (e) {}
+}
+
+function getCookie(name) {
+    try {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
+        }
+    } catch (e) {}
+    return null;
 }
 
 // ===================== THEME FUNCTIONS =====================
@@ -1230,12 +1284,16 @@ function initializePlatform() {
     applyThemeOnLoad();
     const navbarContainer = document.getElementById("navbar-rooms-container");
     navbarContainer.innerHTML = "";
-    const roomLabels = {
-        "room_2023": "2023 Final",
-        "room_2025": "2025 Final",
-        "room_2024": "2024 Final"
-    };
-    Object.keys(examDatabase).forEach(key => {
+    
+    // Sorted rooms from newest to oldest (descending order)
+    const sortedRooms = [
+        { key: "room_2025", label: "2025 Final" },
+        { key: "room_2024", label: "2024 Final" },
+        { key: "room_2023", label: "2023 Final" }
+    ];
+    
+    sortedRooms.forEach(room => {
+        const key = room.key;
         if (!roomScores[key]) roomScores[key] = { submitted: false, score: 0, total: 0 };
         if (!userAnswers[key]) userAnswers[key] = {};
         const btn = document.createElement("button");
@@ -1243,10 +1301,16 @@ function initializePlatform() {
         btn.type = "button";
         btn.className = "tab-idle shrink-0 px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all cursor-pointer flex items-center gap-2 border";
         btn.onclick = () => switchRoom(key);
-        btn.innerHTML = `<span>${roomLabels[key] || key}</span><span id="badge-${key}" class="tab-badge-idle text-[9px] px-1.5 py-0.5 rounded font-bold border">IDLE</span>`;
+        btn.innerHTML = `<span>${room.label}</span><span id="badge-${key}" class="tab-badge-idle text-[9px] px-1.5 py-0.5 rounded font-bold border">IDLE</span>`;
         navbarContainer.appendChild(btn);
         updateNavbarBadgeStatus(key);
     });
+    
+    // Set default room to newest if no saved room
+    if (!localStorage.getItem("math102_portal_activeRoom_v2")) {
+        activeRoomKey = "room_2025";
+    }
+    
     switchRoom(activeRoomKey);
     calculateOverallMetrics();
 }
